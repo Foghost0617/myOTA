@@ -31,7 +31,7 @@ class AuthService:
         self.db.add(db_user)
         self.db.commit()
         self.db.refresh(db_user)
-        print("1zhuce")
+        print("注册成功")
         return UserOut.from_orm(db_user)
 
     def login_user(self, user_login: UserLogin) -> UserOut:
@@ -46,7 +46,7 @@ class AuthService:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                 detail="账号或密码不正确")
 
-        print("1denglv")
+        print("登录成功")
 
         return UserOut.from_orm(db_user)
 
