@@ -32,7 +32,6 @@ def register(user_register: UserRegister, db: Session = Depends(get_db)):
 @router.post("/login", response_model=UserOut)
 def login(user_login: UserLogin, db: Session = Depends(get_db)):
     print(user_login)
-    print("1")
     auth_service = AuthService(db)
     user = auth_service.login_user(user_login)
     return user
