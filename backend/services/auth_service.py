@@ -1,4 +1,5 @@
 from passlib.context import CryptContext
+from sphinx.ext.todo import TodoList
 from sqlalchemy.orm import Session
 from backend.models.user import User
 from backend.schemas.user import UserRegister, UserLogin, UserOut
@@ -18,6 +19,9 @@ class AuthService:
     # 验证密码
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
         return pwd_context.verify(plain_password, hashed_password)
+
+    def verify_role(self, input_role: int, db_role: int) -> bool:
+        return input_role == db_role
 
     def register_user(self, user_register: UserRegister) -> UserOut:
         # 检查账号是否已存在
@@ -45,6 +49,10 @@ class AuthService:
         if not self.verify_password(user_login.password, db_user.password):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                 detail="账号或密码不正确")
+
+        if not self.verify_role(user_login.role, db_user.role):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail="身份不匹配")
 
         print("登录成功")
 
