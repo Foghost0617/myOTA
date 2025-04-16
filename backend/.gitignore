@@ -1,0 +1,11 @@
+# 忽略 PyCharm 相关文件
+.idea/
+
+# 忽略 Python 编译文件
+__pycache__/
+*.pyc
+
+# 忽略虚拟环境
+venv/
+.venv/
+
