@@ -26,6 +26,8 @@
   <script setup>
   import { ref } from 'vue';
   import axios from 'axios';
+  import { useRouter } from 'vue-router'
+  const router = useRouter()
   
   const isRegistering = ref(false)
   const account = ref('')
@@ -49,7 +51,7 @@
         password: password.value,
         role: role.value
       });
-      alert("登录成功！");
+      alert("注册成功！");
       account.value = '';
       password.value = '';
       role.value = 0;
@@ -84,6 +86,23 @@
         role: role.value
       });
       alert("登录成功！");
+      console.log("登录返回：", res.data);
+    // 根据角色跳转到不同页面
+    if (res.data.role === 4) {
+      router.push('/gov')
+    } 
+    else if (res.data.role===3){
+      router.push('/agency')
+    }
+    else if(res.data.role===2){
+      router.push('/guide')
+    }
+    else if(res.data.role===1){
+      router.push('/tourist')
+    }
+    else{
+      alert("暂未开发！")
+    }
     } catch (error) {
        // 添加对 error.response 的检查
     if (error.response) {

@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <Login />
+    <router-view />
   </div>
 </template>
 
 <script setup>
-import Login from './components/Login.vue';
+
 </script>
 
 <style>
