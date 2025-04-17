@@ -31,7 +31,9 @@ class AuthService:
 
         # 创建新用户，密码加密
         hashed_password = self.hash_password(user_register.password)
-        db_user = User(account=user_register.account, password=hashed_password, role=user_register.role)
+        db_user = User(account=user_register.account,
+                       password=hashed_password,
+                       role=user_register.role)
         self.db.add(db_user)
         self.db.commit()
         self.db.refresh(db_user)
