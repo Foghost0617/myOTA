@@ -1,42 +1,42 @@
-
 <template>
-    <div class="dashboard"><!--水平布局-->
+    <div class="dashboard">
       <!-- 左侧导航栏 -->
       <aside class="sidebar">
         <h2>旅社后台</h2>
   
         <div class="nav-group">
           <h3>路线管理</h3>
-          <button class="nav-button">添加路线</button>
-          <button class="nav-button">查看路线</button>
+          <button @click="active = 'add'" class="button">添加路线</button>
+          <button @click="active = 'list'" class="button">查看路线</button>
         </div>
   
         <div class="nav-group">
           <h3>游客管理</h3>
-          <button class="nav-button">处理申请</button>
-          <button class="nav-button">游客列表</button>
+          <button class="button">处理申请</button>
+          <button class="button">游客列表</button>
         </div>
   
         <div class="nav-group">
           <h3>行程管理</h3>
-          <button class="nav-button">安排行程</button>
-          <button class="nav-button">查看行程</button>
+          <button class="button">安排行程</button>
+          <button class="button">查看行程</button>
         </div>
       </aside>
   
-
       <!-- 右侧内容区 -->
       <main class="content">
-        <h1>待定内容，会根据左侧按钮展示不同组件？</h1>
-        <div class="placeholder-box">
-          <p>功能区内容展示？</p>
-        </div>
+        <AddRoute v-shhow="active === 'add'" />
+        <RouteList v-if="active === 'list'" />
       </main>
     </div>
   </template>
   
   <script setup>
-  // 暂时无 JS 逻辑
+  import { ref } from 'vue'
+  import AddRoute from './AddRoute.vue'
+
+  
+  const active = ref('')  // 初始时不显示任何内容，等用户点击按钮
   </script>
   
   <style scoped>
@@ -68,7 +68,8 @@
     margin-bottom: 10px;
   }
   
-  .nav-button {
+  /* 合并 add 和 nav-button 样式 */
+  .button {
     display: block;
     width: 100%;
     padding: 10px;
@@ -81,7 +82,7 @@
     text-align: left;
   }
   
-  .nav-button:hover {
+  .button:hover {
     background-color: #1abc9c;
   }
   
@@ -94,7 +95,7 @@
   
   .content h1 {
     font-size: 24px;
-    color:#2c3e50;
+    color: #2c3e50;
     margin-bottom: 20px;
   }
   
@@ -102,7 +103,8 @@
     background-color: white;
     padding: 20px;
     border-radius: 6px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   </style>
+  
 

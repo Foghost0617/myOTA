@@ -25,7 +25,7 @@
   
   <script setup>
   import { ref } from 'vue';
-  import axios from 'axios';
+  import axios from '@/utils/request'
   import { useRouter } from 'vue-router'
   const router = useRouter()
   
@@ -46,7 +46,7 @@
     });
   
     try {
-      const res = await axios.post('http://localhost:8001/users/register', {
+      const res = await axios.post('/users/register', {
         account: account.value,
         password: password.value,
         role: role.value
@@ -80,7 +80,7 @@
     });
   
     try {
-      const res = await axios.post('http://localhost:8001/users/login', {
+      const res = await axios.post('/users/login', {
         account: account.value,
         password: password.value,
         role: role.value

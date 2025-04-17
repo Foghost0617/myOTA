@@ -7,3 +7,8 @@ import router from './router'
 const app = createApp(App)
 app.use(router)
 app.mount('#app')
+
+// import { createApp } from 'vue';
+// import YourComponent from './views/Agency/AddRoute.vue';  // 你要查看的组件
+
+// createApp(YourComponent).mount('#app');
