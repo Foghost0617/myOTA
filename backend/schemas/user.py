@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-
+# 请求体：注册时用到的字段
 class UserRegister(BaseModel):
     account: str
     password: str
@@ -9,7 +9,7 @@ class UserRegister(BaseModel):
     class Config:
         from_attributes = True  # 允许将 Pydantic 模型转换为 ORM 模型
 
-# 响应体：注册成功后返回的字段
+#注册/登录返回的字段
 class UserOut(BaseModel):
     id: int
     account: str
