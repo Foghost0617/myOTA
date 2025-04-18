@@ -9,9 +9,10 @@ class Route(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     description = Column(String(255))
-    agency_id = Column(Integer, ForeignKey("agencies.id"), nullable=False)
-
+    agency_id = Column(Integer, ForeignKey("travel_agencies.id"), nullable=False)
+    #
     points = relationship("RouteSpot", back_populates="route", cascade="all, delete-orphan")
+    agency = relationship("TravelAgency", back_populates="routes")
 
 
 # 路线景点表
@@ -24,7 +25,7 @@ class RouteSpot(Base):
     description = Column(String(255))
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
-    sort_order = Column(Integer, nullable=False)
+    sequence = Column(Integer, nullable=False)
 
     route = relationship("Route", back_populates="points")
 

@@ -1,7 +1,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.schemas.user import (UserRegister, UserLogin, UserOut)
+from backend.schemas.user import (UserRegister, UserLogin, UserOut,UserLoginOut)
 from backend.services.auth_service import AuthService
 from backend.core.database import SessionLocal
 
@@ -28,10 +28,17 @@ def register(user_register: UserRegister, db: Session = Depends(get_db)):
 
 
 
-# 登录接口
-@router.post("/login", response_model=UserOut)
+# # 登录接口
+# @router.post("/login", response_model=UserOut)
+# def login(user_login: UserLogin, db: Session = Depends(get_db)):
+#     print(user_login)
+#     auth_service = AuthService(db)
+#     user = auth_service.login_user(user_login)
+#     return user
+
+@router.post("/login", response_model=UserLoginOut)
 def login(user_login: UserLogin, db: Session = Depends(get_db)):
-    print(user_login)
+
     auth_service = AuthService(db)
-    user = auth_service.login_user(user_login)
+    user=auth_service.login_user(user_login)
     return user

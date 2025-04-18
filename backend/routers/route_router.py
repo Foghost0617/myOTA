@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 # 创建路线
-@router.post("/info/", response_model=RouteOut)
+@router.post("/info", response_model=RouteOut)
 def create_route(route: RouteCreate):
     db: Session = SessionLocal()
     try:
@@ -29,7 +29,7 @@ def create_route(route: RouteCreate):
         db.close()
 
 # 创建景点（多个）
-@router.post("/route_spots/")
+@router.post("/route_spots")
 def create_route_spots(spots: List[RouteSpotCreate]):
     db: Session = SessionLocal()
     try:

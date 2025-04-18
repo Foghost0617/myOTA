@@ -10,7 +10,7 @@ class RouteSpotBase(BaseModel):
     description: Optional[str] = None
     latitude: float
     longitude: float
-    sort_order: int
+    sequence: int
 
 # 前端给的数据
 class RouteSpotCreate(RouteSpotBase):

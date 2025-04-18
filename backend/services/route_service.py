@@ -33,7 +33,7 @@ class RouteService:
                 description=spot.description,
                 latitude=spot.latitude,
                 longitude=spot.longitude,
-                sort_order=spot.sort_order
+                sequence=spot.sequence
             )
             db_spots.append(db_spot)
 
