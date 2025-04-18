@@ -44,14 +44,17 @@ class RouteService:
 
         # 获取某个旅社的所有路线（只包含名称和简介）
 
-    def get_routes_by_agency(self, agency_id: int) -> List[RouteOut]:
-        # 查询该 agency_id 下所有的路线
-        routes = self.db.query(Route).filter(Route.agency_id == agency_id).all()
+    # def get_routes_by_agency(self, agency_id: int) -> List[RouteOut]:
+    #     # 查询该 agency_id 下所有的路线
+    #     routes = self.db.query(Route).filter(Route.agency_id == agency_id).all()
+    #
+    #     # 打印查询结果，检查是否正确获取了多条记录
+    #     print(f"查询到的路线: {routes}")
+    #
+    #     return [RouteOut.from_orm(route) for route in routes] if routes else []
 
-        # 打印查询结果，检查是否正确获取了多条记录
-        print(f"查询到的路线: {routes}")
-
-        return [RouteOut.from_orm(route) for route in routes] if routes else []
+    def get_routes_by_agency(self, agency_id: int, skip: int = 0, limit: int = 3) -> List[RouteOut]:
+            return self.db.query(Route).filter(Route.agency_id == agency_id).offset(skip).limit(limit).all()
 
         # 获取某条路线的所有景点
 
