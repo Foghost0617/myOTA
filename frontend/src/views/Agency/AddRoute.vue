@@ -321,7 +321,7 @@
   </script>
   
   
-  <style scoped>
+  <!-- <style scoped>
 
 * {
     box-sizing: border-box;
@@ -359,7 +359,94 @@
     gap: 20px;
     margin-top: 20px;
   }
+  </style> -->
+
+  <style scoped>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h2, h3 { /* 直接选择 h2 和 h3 标签 */
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .add-route-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f9f9f9; /* 背景色稍微浅一些 */
+    border-radius: 8px; /* 给容器加圆角 */
+  }
+  
+  .left-pane, .right-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .map-container {
+    width: 100%;
+    height: 400px;
+    margin-top: 10px;
+    border: 2px solid #ddd; /* 使边框颜色变浅 */
+    border-radius: 8px; /* 给地图容器加圆角 */
+    background-color: #eaeaea; /* 给地图容器设置浅灰背景 */
+  }
+  
+  .spot-item {
+    background: #ffffff;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 给每个景点添加阴影 */
+    color: #333; /* 设置深色文字 */
+    font-size: 14px; /* 字体大小稍微调整 */
+    line-height: 1.5;
+  }
+  
+  .spot-item:hover {
+    background-color: #f4f4f4; /* 鼠标悬停时背景变亮 */
+  }
+  
+  .button-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  button {
+    background-color: #4CAF50; /* 主按钮颜色 */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px; /* 圆角按钮 */
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #45a049; /* 按钮悬停效果 */
+  }
+  
+  button:active {
+    background-color: #387f37; /* 按钮按下效果 */
+  }
+  
+  button:disabled {
+    background-color: #bdbdbd; /* 禁用按钮颜色 */
+    cursor: not-allowed;
+  }
   </style>
+  
+
   
 
 
