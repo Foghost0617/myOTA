@@ -5,12 +5,16 @@ import Govmain from '../views/Gov/Govmain.vue'
 import Guidemain from '../views/Guide/Guidemain.vue'
 import Touristmain from '../views/Tourist/Tourist.vue'
 
+
 const routes = [
   { path: '/', component: Login },          // 默认页面：登录
   { path: '/tourist', component: Touristmain },    // 登录成功后跳转到 /agency
   { path: '/guide', component: Guidemain }   , // 登录成功后跳转到 /agency
   { path: '/agency', component: TAmain }    ,// 登录成功后跳转到 /agency
   { path: '/gov', component: Govmain }    ,// 登录成功后跳转到 /agency
+
+
+
 ]
 
 const router = createRouter({

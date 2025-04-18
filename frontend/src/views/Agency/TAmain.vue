@@ -7,7 +7,7 @@
         <div class="nav-group">
           <h3>路线管理</h3>
           <button @click="active = 'add'" class="button">添加路线</button>
-          <!-- <button @click="active = 'list'" class="button">查看路线</button> -->
+          <button @click="active = 'list'" class="button">查看路线</button>
         </div>
   
         <div class="nav-group">
@@ -25,8 +25,8 @@
   
       <!-- 右侧内容区 -->
       <main class="content">
-        <AddRoute v-show="active === 'add'" />
-        <!-- <RouteList v-if="active === 'list'" /> -->
+        <AddRoute v-if="active === 'add'" />
+        <RouteList v-if="active === 'list'" /> 
       </main>
     </div>
   </template>
@@ -34,6 +34,7 @@
   <script setup>
   import { ref } from 'vue'
   import AddRoute from './AddRoute.vue'
+  import RouteList from '@/components/RouteList.vue'
 
   
   const active = ref('')  // 初始时不显示任何内容，等用户点击按钮

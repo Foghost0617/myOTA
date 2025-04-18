@@ -9,4 +9,13 @@ export default defineConfig({
       '@': '/src',  // 让 @ 符号指向 src 文件夹
     },
   },
+  server: {
+    proxy: {
+      '/routes': {
+        target: 'http://localhost:8003', // 后端的地址
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/routes/, ''),
+      },
+    },
+  },
 })
