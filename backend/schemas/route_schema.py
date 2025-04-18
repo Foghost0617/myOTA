@@ -37,3 +37,5 @@ class RouteOut(RouteBase):
     id: int
     class Config:
         from_attributes = True
+
+

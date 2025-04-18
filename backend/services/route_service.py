@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import List
 from backend.models.route_model import Route, RouteSpot
-from backend.schemas.route_schema import RouteCreate, RouteOut, RouteSpotCreate
+from backend.schemas.route_schema import RouteCreate, RouteOut, RouteSpotCreate,RouteSpotOut
 
 
 class RouteService:
@@ -42,21 +42,22 @@ class RouteService:
 
         return db_spots  # 返回创建的景点列表
 
+        # 获取某个旅社的所有路线（只包含名称和简介）
+
+    def get_routes_by_agency(self, agency_id: int) -> List[RouteOut]:
+        # 查询该 agency_id 下所有的路线
+        routes = self.db.query(Route).filter(Route.agency_id == agency_id).all()
+
+        # 打印查询结果，检查是否正确获取了多条记录
+        print(f"查询到的路线: {routes}")
+
+        return [RouteOut.from_orm(route) for route in routes] if routes else []
+
+        # 获取某条路线的所有景点
+
+    def get_route_spots(self, route_id: int) -> List[RouteSpotOut]:
+        # 查询并按景点顺序获取某条路线的所有景点
+        route_spots = self.db.query(RouteSpot).filter(RouteSpot.route_id == route_id).order_by(RouteSpot.sequence).all()
+        return [RouteSpotOut.from_orm(spot) for spot in route_spots]
 
 
-    # 获取所有路线
-    def get_routes(self, skip: int = 0, limit: int = 100) -> List[RouteOut]:
-        routes = self.db.query(Route).offset(skip).limit(limit).all()
-        return routes
-
-    # 获取单个路线
-    def get_route(self, route_id: int) -> RouteOut:
-        route = self.db.query(Route).filter(Route.id == route_id).first()
-        return route
-
-    # 删除路线
-    def delete_route(self, route_id: int):
-        db_route = self.db.query(Route).filter(Route.id == route_id).first()
-        if db_route:
-            self.db.delete(db_route)
-            self.db.commit()
