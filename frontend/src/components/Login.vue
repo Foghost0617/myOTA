@@ -87,22 +87,26 @@
       });
       alert("登录成功！");
       console.log("登录返回：", res.data);
-    // 根据角色跳转到不同页面
-    if (res.data.role === 4) {
-      router.push('/gov')
-    } 
-    else if (res.data.role===3){
-      router.push('/agency')
-    }
-    else if(res.data.role===2){
-      router.push('/guide')
-    }
-    else if(res.data.role===1){
-      router.push('/tourist')
-    }
-    else{
-      alert("暂未开发！")
-    }
+      const data = res.data;
+
+  localStorage.setItem('user_id', data.id)
+  localStorage.setItem('role', data.role)
+
+  if (data.role === 3 && data.agency_id) {
+    localStorage.setItem('agency_id', data.agency_id)
+    router.push('/agency')
+  } else if (data.role === 2 && data.guide_id) {
+    localStorage.setItem('guide_id', data.guide_id)
+    router.push('/guide')
+  } else if (data.role === 1 && data.tourist_id) {
+    localStorage.setItem('tourist_id', data.tourist_id)
+    router.push('/tourist')
+  } else if (data.role === 4 && data.gov_id) {
+    localStorage.setItem('gov_id', data.gov_id)
+    router.push('/gov')
+  } else {
+    alert('暂未开发')
+  }
     } catch (error) {
        // 添加对 error.response 的检查
     if (error.response) {

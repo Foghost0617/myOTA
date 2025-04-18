@@ -1,42 +1,233 @@
-<template>
-    <div class="add-route">
-      <h2>创建路线</h2>
-      <input v-model="routeName" placeholder="路线名称" />
-      <textarea v-model="routeDesc" placeholder="路线简介"></textarea>
-  
-      <div id="map" class="map-container"></div>
-  
-      <h3>景点列表</h3>
-      <div v-for="(spot, index) in spots" :key="index" class="spot-item">
-        <input v-model="spot.name" placeholder="景点名称" />
-        <input v-model="spot.description" placeholder="景点介绍" />
-        <span>纬度: {{ spot.latitude.toFixed(6) }} 经度: {{ spot.longitude.toFixed(6) }}</span>
-        <button @click="removeSpot(index)">删除</button>
+  <!-- <template>
+    <div class="add-route-container">
+      
+      <div class="left-pane">
+        <h2>创建路线</h2>
+        <input v-model="routeName" placeholder="路线名称" />
+        <textarea v-model="routeDesc" placeholder="路线简介"></textarea>
+        <div id="map" class="map-container"></div>
       </div>
   
-      <button @click="submitRouteInfo" :disabled="routeId">提交基本路线信息</button>
-      <!-- 第二个按钮只有在成功提交基本路线后才显示 -->
-      <button v-if="routeId" @click="submitRouteSpots">提交景点信息</button>
+      
+      <div class="right-pane">
+        <h3>景点列表</h3>
+        <div
+          v-for="(spot, index) in spots"
+          :key="index"
+          class="spot-item"
+        >
+          <input v-model="spot.name" placeholder="景点名称" />
+          <input v-model="spot.description" placeholder="景点介绍" />
+          <span>
+            纬度: {{ spot.latitude.toFixed(6) }} 经度: {{ spot.longitude.toFixed(6) }}
+          </span>
+          <button @click="removeSpot(index)">删除</button>
+        </div>
+      </div>
+    </div>
+  
+    
+    <div class="button-row">
+      <button
+        @click="submitRouteInfo"
+        :disabled="!routeName || !routeDesc"
+      >提交基本路线信息</button>
+  
+      <button
+        @click="submitRouteSpots"
+        :disabled="!routeId || spots.length === 0 || hasInvalidSpots"
+      >提交景点信息</button>
     </div>
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import AMapLoader from '@amap/amap-jsapi-loader'
   import axios from '@/utils/request'
   
-  // 基本信息
+  // 表单数据
   const routeName = ref('')
   const routeDesc = ref('')
+  const routeId = ref(null)
   const spots = ref([])
   
-  // 存储已创建的 route_id
+  
+
+  // 判断是否有未填写完整的景点
+  const hasInvalidSpots = computed(() => {
+    return spots.value.some(s => !s.name || !s.latitude || !s.longitude)
+  })
+  
+  // 地图初始化
+  const loadMap = () => {
+    AMapLoader.load({
+      key: import.meta.env.VITE_AMAP_KEY,
+      version: '2.0',
+      plugins: ['AMap.PlaceSearch', 'AMap.Geocoder', 'AMap.ToolBar'],
+    }).then((AMap) => {
+      const map = new AMap.Map('map', {
+        zoom: 12,
+        center: [114.35806, 30.533177],
+      })
+  
+
+      map.addControl(new AMap.ToolBar())
+  
+      map.on('click', (e) => {
+        const { lng, lat } = e.lnglat
+        spots.value.push({
+          name: '',
+          description: '',
+          latitude: lat,
+          longitude: lng,
+          sequence: spots.value.length + 1,
+        })
+        new AMap.Marker({ position: [lng, lat], map })
+      })
+    }).catch(console.error)
+  }
+  
+  onMounted(() => loadMap())
+  
+  // 删除景点
+  const removeSpot = (index) => {
+    spots.value.splice(index, 1)
+    // 更新排序
+    spots.value.forEach((s, i) => (s.sequence = i + 1))
+  }
+  
+  // 提交基本路线信息
+  const submitRouteInfo = async () => {
+    const agency_id = parseInt(localStorage.getItem('agency_id') || '0')
+    if (!agency_id) {
+    alert('请重新登录获取身份信息')
+    return
+    }
+
+    try {
+      const res = await axios.post('/routes/info/', {
+        name: routeName.value,
+        description: routeDesc.value,
+        agency_id: agency_id
+      })
+      routeId.value = res.data.id
+      alert('路线创建成功，接下来可以提交景点信息')
+    } catch (err) {
+      alert(err.response?.data?.detail || '路线创建失败')
+    }
+  }
+  
+  // 提交景点信息
+  const submitRouteSpots = async () => {
+    try {
+      const payload = spots.value.map(s => ({
+        route_id: routeId.value,
+        name: s.name,
+        description: s.description || '',
+        latitude: s.latitude,
+        longitude: s.longitude,
+        sequence: s.sequence
+      }))
+      await axios.post('/routes/route_spots/', payload)
+      alert('景点提交成功')
+  
+      // 重置
+      routeName.value = ''
+      routeDesc.value = ''
+      routeId.value = null
+      spots.value = []
+    } catch (err) {
+      alert(err.response?.data?.detail || '提交失败')
+    }
+  }
+  </script>
+  
+  <style scoped>
+  .add-route-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .left-pane, .right-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .map-container {
+    width: 100%;
+    height: 400px;
+    margin-top: 10px;
+    border: 1px solid black;
+  }
+  
+  .spot-item {
+    background: #f2f2f2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+  }
+  
+  .button-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  </style> -->
+  
+  <template>
+    <div class="add-route-container">
+      <div class="left-pane">
+        <h2>创建路线</h2>
+        <input v-model="routeName" placeholder="路线名称" />
+        <textarea v-model="routeDesc" placeholder="路线简介"></textarea>
+        <div id="map" class="map-container"></div>
+      </div>
+  
+      <div class="right-pane">
+        <h3>景点列表</h3>
+        <div v-for="(spot, index) in spots" :key="index" class="spot-item">
+          <input v-model="spot.name" placeholder="景点名称" />
+          <input v-model="spot.description" placeholder="景点介绍" />
+          <span>
+            纬度: {{ spot.latitude.toFixed(6) }} 经度: {{ spot.longitude.toFixed(6) }}
+          </span>
+          <button @click="removeSpot(index)">删除</button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="button-row">
+      <button @click="submitRouteInfo" :disabled="!routeName || !routeDesc">
+        提交基本路线信息
+      </button>
+  
+      <button @click="submitRouteSpots" :disabled="!routeId || spots.length === 0 || hasInvalidSpots">
+        提交景点信息
+      </button>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref, computed, onMounted } from 'vue'
+  import AMapLoader from '@amap/amap-jsapi-loader'
+  import axios from '@/utils/request'
+  
+  const routeName = ref('')
+  const routeDesc = ref('')
   const routeId = ref(null)
+  const spots = ref([])
+  const markers = ref([]) // 用来存储每个标记
   
-  // 模拟 agency_id（建议登录状态中保存到 localStorage 或 Vuex）
-  const agency_id = parseInt(localStorage.getItem('agency_id') || '1')
+  // 判断是否有未填写完整的景点
+  const hasInvalidSpots = computed(() => {
+    return spots.value.some(s => !s.name || !s.latitude || !s.longitude)
+  })
   
-  // 加载地图
+  // 地图初始化
   const loadMap = () => {
     AMapLoader.load({
       key: import.meta.env.VITE_AMAP_KEY,
@@ -50,112 +241,129 @@
   
       map.addControl(new AMap.ToolBar())
   
-      // 点击地图添加标点
-      map.on('click', function (e) {
+      map.on('click', (e) => {
         const { lng, lat } = e.lnglat
         spots.value.push({
           name: '',
           description: '',
           latitude: lat,
           longitude: lng,
-          sequence: spots.value.length + 1
+          sequence: spots.value.length + 1,
         })
-  
-        new AMap.Marker({ position: [lng, lat], map })
+        const marker = new AMap.Marker({ position: [lng, lat], map })
+        markers.value.push(marker)  // 将每个新标记存入 markers 数组
       })
     }).catch(console.error)
   }
   
-  // 删除景点
+  onMounted(() => loadMap())
+  
+  // 删除景点及对应标记
   const removeSpot = (index) => {
+    const marker = markers.value[index]  // 获取对应的标记
+    if (marker) {
+      marker.setMap(null)  // 从地图上删除标记
+    }
     spots.value.splice(index, 1)
-    spots.value.forEach((s, i) => s.sequence = i + 1)
+    // 更新排序
+    spots.value.forEach((s, i) => (s.sequence = i + 1))
+    markers.value.splice(index, 1)  // 从 markers 数组中删除对应的标记
   }
   
-  // 提交基本路线信息（名称、描述、旅社id）
+  // 提交基本路线信息
   const submitRouteInfo = async () => {
-    if (!routeName.value || !routeDesc) {
-      alert('请先填写路线名称和描述')
+    const agency_id = parseInt(localStorage.getItem('agency_id') || '0')
+    if (!agency_id) {
+      alert('请重新登录获取身份信息')
       return
     }
-    
+  
     try {
-      // 创建路线，获取 route_id
-      console.log(routeName.value,routeDesc.value,agency_id)
-      const res = await axios.post('/routes/info/', {
+      const res = await axios.post('/routes/info', {
         name: routeName.value,
         description: routeDesc.value,
         agency_id: agency_id
       })
-      console.log(res.data)
-  
       routeId.value = res.data.id
-      if (!routeId.value) {
-        throw new Error('未获取到路线ID')
-      }
-      alert('基本路线信息已提交，接下来请提交景点信息')
-  
+      alert('路线创建成功，接下来可以提交景点信息')
     } catch (err) {
-      alert(err.response?.data?.detail || '创建失败')
+      alert(err.response?.data?.detail || '路线创建失败')
     }
   }
   
-  // 提交景点信息，带上 route_id
+  // 提交景点信息
   const submitRouteSpots = async () => {
-    if (!routeId.value) {
-      alert('请先提交基本路线信息')
-      return
-    }
-  
     try {
-      // 提交景点信息
-      const spotPayload = spots.value.map((s) => ({
+      const payload = spots.value.map(s => ({
         route_id: routeId.value,
         name: s.name,
-        description: s.description,
+        description: s.description || '',
         latitude: s.latitude,
         longitude: s.longitude,
-        sort_order: s.sequence
+        sequence: s.sequence
       }))
+      await axios.post('/routes/route_spots', payload)
+      alert('景点提交成功')
   
-      await axios.post('/routes/route_spots/', spotPayload)
+      // 清除标记
+      markers.value.forEach(marker => marker.setMap(null))  // 删除所有标记
+      markers.value = []  // 清空标记数组
   
-      alert('景点信息创建成功')
-  
-      // 清空表单
+      // 重置
       routeName.value = ''
       routeDesc.value = ''
-      spots.value = []
       routeId.value = null
-  
+      spots.value = []
     } catch (err) {
-      alert(err.response?.data?.detail || '创建失败')
+      alert(err.response?.data?.detail || '提交失败')
     }
   }
-  
-  onMounted(() => loadMap())
   </script>
   
+  
   <style scoped>
-  .add-route {
-    max-width: 800px;
-    margin: auto;
+
+* {
+    box-sizing: border-box;
   }
+  .add-route-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .left-pane, .right-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
   .map-container {
     width: 100%;
     height: 400px;
-    margin-bottom: 20px;
+    margin-top: 10px;
     border: 1px solid black;
   }
+  
   .spot-item {
     background: #f2f2f2;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 6px;
   }
+  
+  .button-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
   </style>
   
-  
-  
-  
-  
+
+
+
+
+
+

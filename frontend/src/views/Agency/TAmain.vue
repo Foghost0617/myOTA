@@ -7,7 +7,7 @@
         <div class="nav-group">
           <h3>路线管理</h3>
           <button @click="active = 'add'" class="button">添加路线</button>
-          <button @click="active = 'list'" class="button">查看路线</button>
+          <!-- <button @click="active = 'list'" class="button">查看路线</button> -->
         </div>
   
         <div class="nav-group">
@@ -25,8 +25,8 @@
   
       <!-- 右侧内容区 -->
       <main class="content">
-        <AddRoute v-shhow="active === 'add'" />
-        <RouteList v-if="active === 'list'" />
+        <AddRoute v-show="active === 'add'" />
+        <!-- <RouteList v-if="active === 'list'" /> -->
       </main>
     </div>
   </template>
@@ -40,34 +40,40 @@
   </script>
   
   <style scoped>
+ 
+  * {
+    box-sizing: border-box;
+  }
+
   .dashboard {
     display: flex;
     height: 100vh;
     font-family: Arial, sans-serif;
   }
-  
+
   /* 左侧侧边栏 */
   .sidebar {
-    width: 220px;
+    width: 20%; /* 左侧占 20% */
     background-color: #2c3e50;
     color: white;
     padding: 20px;
+    box-sizing: border-box; /* 确保 padding 不影响宽度计算 */
   }
-  
+
   .sidebar h2 {
     font-size: 20px;
     margin-bottom: 20px;
   }
-  
+
   .nav-group {
     margin-bottom: 30px;
   }
-  
+
   .nav-group h3 {
     font-size: 16px;
     margin-bottom: 10px;
   }
-  
+
   /* 合并 add 和 nav-button 样式 */
   .button {
     display: block;
@@ -81,30 +87,33 @@
     cursor: pointer;
     text-align: left;
   }
-  
+
   .button:hover {
     background-color: #1abc9c;
   }
-  
+
   /* 右侧内容区 */
   .content {
-    flex: 1;
+    flex: 1; /* 右侧占剩余空间，即 80% */
     padding: 30px;
     background-color: #ecf0f1;
+    box-sizing: border-box; /* 确保 padding 不影响宽度计算 */
   }
-  
+
   .content h1 {
     font-size: 24px;
     color: #2c3e50;
     margin-bottom: 20px;
   }
-  
+
   .placeholder-box {
     background-color: white;
     padding: 20px;
     border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
-  </style>
+</style>
+
+
   
 
