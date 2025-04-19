@@ -28,6 +28,22 @@ def create_route(route: RouteCreate):
     finally:
         db.close()
 
+# 创建景点（多个）
+@router.post("/route_spots/")
+def create_route_spots(spots: List[RouteSpotCreate]):
+     db: Session = SessionLocal()
+     try:
+         route_spot_service = RouteService(db)
+         db_spots = route_spot_service.create_route_spots(spots)
+         if not db_spots:
+             raise HTTPException(
+                 status_code=status.HTTP_400_BAD_REQUEST,
+                 detail="无法创建景点"
+             )
+         return db_spots
+     finally:
+         db.close()
+
 
 # @router.get("/agency/{agency_id}", response_model=List[RouteOut])
 # def get_routes_by_agency(agency_id: int):
