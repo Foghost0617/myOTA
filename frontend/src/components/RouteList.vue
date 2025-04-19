@@ -169,17 +169,21 @@
   </style> -->
   
 
-  <template>
+
+
+
+
+  <!-- <template>
     <div class="route-list">
       <h1>所有路线</h1>
-      <!-- 显示路线列表 -->
+      
       <div v-for="route in routes" :key="route.id" class="route-item">
         <h2>{{ route.name }}</h2>
         <p>{{ route.description }}</p>
         <button @click="viewDetails(route.id)">查看详情</button>
       </div>
   
-      <!-- 分页控制按钮 -->
+      
       <div class="pagination">
         <button @click="previousPage" :disabled="page === 1">上一页</button>
         <span>第 {{ page }} 页</span>
@@ -258,8 +262,227 @@
       }
     },
   };
+  </script> -->
+  
+
+
+
+
+
+
+
+
+
+
+  <template>
+    <div class="route-list">
+      <h1>所有路线</h1>
+  
+      <!-- 使用 RouteCard 显示每条路线 -->
+      <RouteCard
+        v-for="route in routes"
+        :key="route.id"
+        :route="route"
+        :showDelete="showDelete" 
+        @view="viewDetails"
+        @delete="deleteRoute"
+      />
+  
+      <!-- 分页控制按钮 -->
+      <div class="pagination">
+        <button @click="previousPage" :disabled="page === 1">上一页</button>
+        <span>第 {{ page }} 页</span>
+        <button @click="nextPage" :disabled="routes.length < limit">下一页</button>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  import axios from '@/utils/request';
+  import RouteCard from '@/components/RouteCard.vue';
+  
+  const agency_id = parseInt(localStorage.getItem('agency_id') || '0');
+  
+  export default {
+    components: {
+      RouteCard,
+    },
+    props: {
+      showDelete: {  // 接收父组件传递的 showDelete 值
+        type: Boolean,
+        default: true,  // 默认值是 true，但可以根据需要在父组件控制
+      },
+    },
+    computed: {
+      agencyId() {
+        return agency_id;
+      },
+    },
+    data() {
+      return {
+        routes: [],
+        page: 1,
+        limit: 3,
+      };
+    },
+    mounted() {
+      this.fetchRoutes();
+    },
+    methods: {
+      async fetchRoutes() {
+        try {
+          const response = await axios.get(`/routes/agency/${this.agencyId}`, {
+            params: {
+              skip: (this.page - 1) * this.limit,
+              limit: this.limit,
+            },
+          });
+          if (Array.isArray(response.data)) {
+            this.routes = response.data;
+          } else {
+            console.error('返回数据格式不正确:', response.data);
+          }
+        } catch (error) {
+          console.error('获取路线列表失败', error);
+          alert('无法获取路线列表');
+        }
+      },
+  
+      viewDetails(routeId) {
+        this.$emit('view-details', routeId);
+      },
+  
+      async deleteRoute(routeId) {
+        const confirmed = confirm('确定要删除这条路线吗？');
+        if (!confirmed) return;
+  
+        try {
+          await axios.delete(`/routes/del/${routeId}`);
+          alert('删除成功');
+          this.fetchRoutes(); // 重新加载列表
+        } catch (error) {
+          console.error('删除路线失败', error);
+          alert('删除失败');
+        }
+      },
+  
+      nextPage() {
+        this.page += 1;
+        this.fetchRoutes();
+      },
+  
+      previousPage() {
+        if (this.page > 1) {
+          this.page -= 1;
+          this.fetchRoutes();
+        }
+      },
+    },
+  };
   </script>
   
+
+  <!-- <template>
+    <div class="route-list">
+      <h1>所有路线</h1>
+  
+      
+      <RouteCard
+        v-for="route in routes"
+        :key="route.id"
+        :route="route"
+        :showDelete="true"
+        @view="viewDetails"
+        @delete="deleteRoute"
+      />
+  
+      
+      <div class="pagination">
+        <button @click="previousPage" :disabled="page === 1">上一页</button>
+        <span>第 {{ page }} 页</span>
+        <button @click="nextPage" :disabled="routes.length < limit">下一页</button>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  import axios from '@/utils/request';
+  import RouteCard from '@/components/RouteCard.vue'; // 路径请根据你项目实际调整
+  
+  const agency_id = parseInt(localStorage.getItem('agency_id') || '0');
+  
+  export default {
+    components: {
+      RouteCard,
+    },
+    computed: {
+      agencyId() {
+        return agency_id;
+      },
+    },
+    data() {
+      return {
+        routes: [],
+        page: 1,
+        limit: 3,
+      };
+    },
+    mounted() {
+      this.fetchRoutes();
+    },
+    methods: {
+      async fetchRoutes() {
+        try {
+          const response = await axios.get(`/routes/agency/${this.agencyId}`, {
+            params: {
+              skip: (this.page - 1) * this.limit,
+              limit: this.limit,
+            },
+          });
+          if (Array.isArray(response.data)) {
+            this.routes = response.data;
+          } else {
+            console.error('返回数据格式不正确:', response.data);
+          }
+        } catch (error) {
+          console.error('获取路线列表失败', error);
+          alert('无法获取路线列表');
+        }
+      },
+  
+      viewDetails(routeId) {
+        this.$emit('view-details', routeId);
+      },
+  
+      async deleteRoute(routeId) {
+        const confirmed = confirm('确定要删除这条路线吗？');
+        if (!confirmed) return;
+  
+        try {
+          await axios.delete(`/routes/del/${routeId}`);
+          alert('删除成功');
+          this.fetchRoutes(); // 重新加载列表
+        } catch (error) {
+          console.error('删除路线失败', error);
+          alert('删除失败');
+        }
+      },
+  
+      nextPage() {
+        this.page += 1;
+        this.fetchRoutes();
+      },
+  
+      previousPage() {
+        if (this.page > 1) {
+          this.page -= 1;
+          this.fetchRoutes();
+        }
+      },
+    },
+  };
+  </script> -->
+
 
   <style scoped>
   /* 设置整体页面的背景和字体 */
@@ -364,34 +587,6 @@
     color: #333;
   }
   
-  /* 响应式设计：小屏幕设备上的样式 */
-  @media (max-width: 600px) {
-    h1 {
-      font-size: 1.5rem;
-    }
-  
-    .route-item {
-      padding: 10px;
-    }
-  
-    .route-item h2 {
-      font-size: 1.2rem;
-    }
-  
-    .route-item p {
-      font-size: 0.9rem;
-    }
-  
-    .route-item button {
-      padding: 8px 16px;
-      font-size: 0.9rem;
-    }
-  
-    .pagination button {
-      padding: 8px 16px;
-      font-size: 0.9rem;
-    }
-  }
-  
+
   </style>
   

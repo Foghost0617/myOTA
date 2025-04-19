@@ -1,4 +1,58 @@
-<template>
+<!-- <template>
+    <div class="dashboard">
+      
+      <aside class="sidebar">
+        <h2>旅社后台</h2>
+  
+        <div class="nav-group">
+          <h3>路线管理</h3>
+          <button @click="active = 'add'" class="button">添加路线</button>
+          <button @click="active = 'list'" class="button">查看路线</button>
+        </div>
+  
+        <div class="nav-group">
+          <h3>游客管理</h3>
+          <button class="button">处理申请</button>
+          <button class="button">游客列表</button>
+        </div>
+  
+        <div class="nav-group">
+          <h3>行程管理</h3>
+          <button class="button">安排行程</button>
+          <button class="button">查看行程</button>
+        </div>
+      </aside>
+  
+      
+      <main class="content">
+        <AddRoute v-if="active === 'add'" />
+        
+        <RouteList v-if="active === 'list'" @view-details="viewRouteDetails" />
+        <RouteDetails v-if="active === 'details'" :routeId="routeId" />
+      </main>
+    </div>
+  </template> -->
+  
+  <!-- <script setup>
+  import { ref } from 'vue'
+  import AddRoute from './AddRoute.vue'
+  import RouteList from '@/components/RouteList.vue'
+ import RouteDetails from '@/components/RouteDetails.vue'
+
+  
+  const active = ref('')  // 初始时不显示任何内容，等用户点击按钮
+  const routeId = ref(null);  // 保存选中的 routeId
+  // 切换到查看详情页面，并传递 routeId
+  const viewRouteDetails = (id) => {
+      console.log('从routelist接收到 routeId:', id);  // 检查传入的 routeId
+      active.value = 'details';
+      routeId.value = id;
+  };
+
+  </script> -->
+  
+
+  <template>
     <div class="dashboard">
       <!-- 左侧导航栏 -->
       <aside class="sidebar">
@@ -26,31 +80,34 @@
       <!-- 右侧内容区 -->
       <main class="content">
         <AddRoute v-if="active === 'add'" />
-        <!-- <RouteList v-if="active === 'list'" />  -->
-        <RouteList v-if="active === 'list'" @view-details="viewRouteDetails" />
+        <!-- 在查看路线时，传递 showDelete 控制删除按钮的显示 -->
+        <RouteList v-if="active === 'list'" :showDelete="showDelete" @view-details="viewRouteDetails" />
         <RouteDetails v-if="active === 'details'" :routeId="routeId" /> <!-- 显式传递 routeId -->
       </main>
     </div>
   </template>
   
   <script setup>
-  import { ref } from 'vue'
-  import AddRoute from './AddRoute.vue'
-  import RouteList from '@/components/RouteList.vue'
- import RouteDetails from '@/components/RouteDetails.vue'
-
+  import { ref } from 'vue';
+  import AddRoute from './AddRoute.vue';
+  import RouteList from '@/components/RouteList.vue';
+  import RouteDetails from '@/components/RouteDetails.vue';
   
-  const active = ref('')  // 初始时不显示任何内容，等用户点击按钮
+  const active = ref('');  // 初始时不显示任何内容，等用户点击按钮
   const routeId = ref(null);  // 保存选中的 routeId
+  
+  // 判定是否显示删除按钮（例如：管理员角色可以删除，游客不可删除）
+  const showDelete = ref(true);  // 假设管理员可以删除，游客不可删除，可以根据角色修改这个值
+  
   // 切换到查看详情页面，并传递 routeId
   const viewRouteDetails = (id) => {
-      console.log('从routelist接收到 routeId:', id);  // 检查传入的 routeId
-      active.value = 'details';
-      routeId.value = id;
+    console.log('从routelist接收到 routeId:', id);  // 检查传入的 routeId
+    active.value = 'details';
+    routeId.value = id;
   };
-
   </script>
   
+
   <style scoped>
  
   * {
