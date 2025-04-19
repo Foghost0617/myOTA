@@ -26,7 +26,9 @@
       <!-- 右侧内容区 -->
       <main class="content">
         <AddRoute v-if="active === 'add'" />
-        <RouteList v-if="active === 'list'" /> 
+        <!-- <RouteList v-if="active === 'list'" />  -->
+        <RouteList v-if="active === 'list'" @view-details="viewRouteDetails" />
+        <RouteDetails v-if="active === 'details'" :routeId="routeId" /> <!-- 显式传递 routeId -->
       </main>
     </div>
   </template>
@@ -35,9 +37,18 @@
   import { ref } from 'vue'
   import AddRoute from './AddRoute.vue'
   import RouteList from '@/components/RouteList.vue'
+ import RouteDetails from '@/components/RouteDetails.vue'
 
   
   const active = ref('')  // 初始时不显示任何内容，等用户点击按钮
+  const routeId = ref(null);  // 保存选中的 routeId
+  // 切换到查看详情页面，并传递 routeId
+  const viewRouteDetails = (id) => {
+      console.log('从routelist接收到 routeId:', id);  // 检查传入的 routeId
+      active.value = 'details';
+      routeId.value = id;
+  };
+
   </script>
   
   <style scoped>

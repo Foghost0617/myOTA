@@ -191,6 +191,7 @@
   <script>
   import axios from '@/utils/request';
   
+  
   const agency_id = parseInt(localStorage.getItem('agency_id') || '0');
   
   export default {
@@ -236,10 +237,11 @@
         }
       },
   
-      // 查看详情的跳转
-      viewDetails(routeId) {
-        this.$router.push({ name: 'RouteDetails', params: { routeId } });
-      },
+       // 点击查看详情按钮，触发事件
+       viewDetails(routeId) {
+          console.log('触发查看详情，传递的 routeId:', routeId);  // 检查传递的 routeId
+          this.$emit('view-details', routeId);
+        },
   
       // 下一页
       nextPage() {
@@ -258,17 +260,20 @@
   };
   </script>
   
+
   <style scoped>
   /* 设置整体页面的背景和字体 */
   .route-list {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
     padding: 20px;
-    min-height: 90vh; /* 使页面至少充满屏幕 */
-    max-width: 1200px; /* 限制页面的最大宽度 */
-    margin: 0 auto; /* 居中显示 */
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-height: calc(100vh - 60px);  /* 限制最大高度为视窗高度减去顶部区域 */
+  overflow-y: auto;  /* 当内容超出最大高度时显示滚动条 */
+  margin: 0 auto;
   }
-  
+
   /* 主标题样式 */
   h1 {
     font-size: 2rem;
@@ -388,6 +393,5 @@
     }
   }
   
-
   </style>
   

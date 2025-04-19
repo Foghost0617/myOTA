@@ -212,7 +212,7 @@
   </template>
   
   <script setup>
-  import { ref, computed, onMounted } from 'vue'
+  import { ref, computed, onMounted, reactive } from 'vue'
   import AMapLoader from '@amap/amap-jsapi-loader'
   import axios from '@/utils/request'
   
@@ -277,6 +277,7 @@
       alert('请重新登录获取身份信息')
       return
     }
+    console.log('进入基本提交')
   
     try {
       const res = await axios.post('/routes/info', {
@@ -284,6 +285,7 @@
         description: routeDesc.value,
         agency_id: agency_id
       })
+      console.log(res.data)
       routeId.value = res.data.id
       alert('路线创建成功，接下来可以提交景点信息')
     } catch (err) {
@@ -302,7 +304,9 @@
         longitude: s.longitude,
         sequence: s.sequence
       }))
-      await axios.post('/routes/route_spots', payload)
+      console.log(payload.data)
+      const res=await axios.post('/routes/route_spots', payload)
+      console.log(res.data)
       alert('景点提交成功')
   
       // 清除标记
