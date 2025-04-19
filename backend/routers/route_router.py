@@ -83,6 +83,24 @@ def get_routes_by_agency(agency_id: int, skip: int = 0, limit: int = 3):
         db.close()
 
 
+@router.get("/all", response_model=List[RouteOut])
+def get_routes(skip: int = 0, limit: int = 3):
+    db: Session = SessionLocal()
+    try:
+        route_service = RouteService(db)
+        routes = route_service.get_all_routes(skip, limit)
+
+        if not routes:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No routes found"
+            )
+
+        return routes
+
+    finally:
+        db.close()  # 确保会话被关闭
+
 
 @router.get("/spots/{route_id}", response_model=List[RouteSpotOut])
 def get_route_spots(route_id: int):
@@ -98,3 +116,23 @@ def get_route_spots(route_id: int):
         return route_spots
     finally:
         db.close()
+
+
+@router.delete("/del/{route_id}")
+def delete_route(route_id: int):
+    db: Session = SessionLocal()
+    try:
+        print(f"Deleting route with ID: {route_id}")
+        route_service = RouteService(db)
+        result = route_service.delete_route(route_id)
+        if result:
+            return {"message": f"Route {route_id} deleted successfully"}
+        else:
+            print(f"Route {route_id} not found in the database")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Route {route_id} not found"
+            )
+    finally:
+        db.close()
+
