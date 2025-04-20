@@ -3,7 +3,7 @@
     <h2>{{ route.name }}</h2>
     <p>{{ route.description }}</p>
     <div class="buttons">
-      <button @click="$emit('view', route.id)">查看详情</button>
+      <button @click="$emit('view-details', route.id)">查看详情</button>
       <button v-if="showDelete" @click="$emit('delete', route.id)" class="delete-button">删除</button>
     </div>
   </div>

@@ -43,10 +43,10 @@
   onMounted(async () => {
   try {
     const agencyId = agency_id;
-    const routeResponse = await axios.get(`/routes/assign/${agencyId}`); // 这里调用你的后端接口，传递 agency_id
+    const routeResponse = await axios.get(`/routes/assign/${agencyId}`); 
     routes.value = routeResponse.data;
 
-    const guideResponse = await axios.get('/guides/allguides'); // 假设你有一个获取导游列表的 API
+    const guideResponse = await axios.get('/guides/allguides'); 
     guides.value = guideResponse.data;
   } catch (error) {
     console.error('获取数据失败:', error);

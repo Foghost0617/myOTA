@@ -271,14 +271,144 @@
 
 
 
-
-
-
   <template>
     <div class="route-list">
       <h1>所有路线</h1>
   
       <!-- 使用 RouteCard 显示每条路线 -->
+      <RouteCard
+        v-for="route in displayedRoutes"
+        :key="route.id"
+        :route="route"
+        :showDelete="showDelete"
+        @view-details="viewDetails"
+        @delete-route="deleteRoute"
+      />
+  
+      <!-- 分页控制按钮 -->
+      <div class="pagination">
+        <button @click="previousPage" :disabled="page === 1">上一页</button>
+        <span>第 {{ page }} 页</span>
+        <button @click="nextPage" :disabled="page * limit >= routes.length">下一页</button>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  import axios from '@/utils/request';
+  import RouteCard from '@/components/RouteCard.vue';
+  
+  const localAgencyId = parseInt(localStorage.getItem('agency_id') || '0');
+  const localGuideId = parseInt(localStorage.getItem('guide_id') || '0');
+  
+  export default {
+    components: {
+      RouteCard,
+    },
+    props: {
+      showDelete: {
+        type: Boolean,
+        default: true,
+      },
+    },
+    data() {
+      return {
+        routes: [],
+        displayedRoutes: [],
+        page: 1,
+        limit: 3,
+        agencyId: 0,
+      };
+    },
+    mounted() {
+      this.init();
+    },
+    methods: {
+      async init() {
+        // 判断用的是 agency_id 还是 guide_id
+        if (localAgencyId !== 0) {
+          this.agencyId = localAgencyId;
+          this.fetchRoutes();
+        } else if (localGuideId !== 0) {
+          try {
+            const response = await axios.get(`/guides/agency/${localGuideId}`);
+            this.agencyId = response.data.agency_id;
+            this.fetchRoutes();
+          } catch (error) {
+            console.error('获取导游对应的 agency_id 失败', error);
+            alert('无法获取所属旅行社');
+          }
+        } else {
+          alert('请登录后查看路线');
+        }
+      },
+  
+      async fetchRoutes() {
+        try {
+          const response = await axios.get(`/routes/agency/${this.agencyId}`);
+          if (Array.isArray(response.data)) {
+            this.routes = response.data;
+            this.updateDisplayedRoutes();
+          } else {
+            console.error('返回数据格式不正确:', response.data);
+          }
+        } catch (error) {
+          console.error('获取路线列表失败', error);
+          alert('无法获取路线列表');
+        }
+      },
+  
+      updateDisplayedRoutes() {
+        const start = (this.page - 1) * this.limit;
+        const end = start + this.limit;
+        this.displayedRoutes = this.routes.slice(start, end);
+      },
+  
+      viewDetails(routeId) {
+        this.$emit('view-details', routeId);
+      },
+  
+      async deleteRoute(routeId) {
+        const confirmed = confirm('确定要删除这条路线吗？');
+        if (!confirmed) return;
+  
+        try {
+          await axios.delete(`/routes/del/${routeId}`);
+          alert('删除成功');
+          this.page = 1; // 回到第一页
+          this.fetchRoutes(); // 重新加载列表
+        } catch (error) {
+          console.error('删除路线失败', error);
+          alert('删除失败');
+        }
+      },
+  
+      nextPage() {
+        if (this.page * this.limit < this.routes.length) {
+          this.page += 1;
+          this.updateDisplayedRoutes();
+        }
+      },
+  
+      previousPage() {
+        if (this.page > 1) {
+          this.page -= 1;
+          this.updateDisplayedRoutes();
+        }
+      },
+    },
+  };
+  </script>
+  
+
+
+
+
+  <!-- <template>
+    <div class="route-list">
+      <h1>所有路线</h1>
+  
+      最新版的牵一半！！
       <RouteCard
         v-for="route in routes"
         :key="route.id"
@@ -288,7 +418,7 @@
         @delete="deleteRoute"
       />
   
-      <!-- 分页控制按钮 -->
+     
       <div class="pagination">
         <button @click="previousPage" :disabled="page === 1">上一页</button>
         <span>第 {{ page }} 页</span>
@@ -302,6 +432,9 @@
   import RouteCard from '@/components/RouteCard.vue';
   
   const agency_id = parseInt(localStorage.getItem('agency_id') || '0');
+  const guide_id=parseInt(localStorage.getItem('guide_id')||'0');
+  
+
   
   export default {
     components: {
@@ -379,7 +512,7 @@
       },
     },
   };
-  </script>
+  </script> -->
   
 
   <!-- <template>

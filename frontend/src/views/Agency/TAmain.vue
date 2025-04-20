@@ -99,7 +99,7 @@
   const routeId = ref(null);  // 保存选中的 routeId
   
   // 判定是否显示删除按钮（例如：管理员角色可以删除，游客不可删除）
-  const showDelete = ref(false);  // 假设管理员可以删除，游客不可删除，可以根据角色修改这个值
+  const showDelete = ref(true);  // 假设管理员可以删除，游客不可删除，可以根据角色修改这个值
   
   // 切换到查看详情页面，并传递 routeId
   const viewRouteDetails = (id) => {

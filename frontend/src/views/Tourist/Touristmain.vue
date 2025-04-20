@@ -1,4 +1,3 @@
-
 <template>
   <div class="dashboard">
     <!-- 左侧导航栏 -->
@@ -7,6 +6,7 @@
 
       <div class="nav-group">
         <h3>旅游路线</h3>
+        <button @click="active = 'list'" class="button">查看路线</button>
         <button class="nav-button" @click="active = 'route-signup'">我要报名</button>
       </div>
 
@@ -25,22 +25,40 @@
     <!-- 右侧内容区 -->
     <main class="content">
       <RouteSignup v-if="active === 'route-signup'" />
-      <div v-if="active !== 'route-signup'">
-        <h1>待定内容，会根据左侧按钮展示不同组件</h1>
-        <div class="placeholder-box">
-          <p>功能区内容展示</p>
-        </div>
-      </div>
+      
+      <!-- 这里展示 AllRouteList 组件 -->
+      <AllRouteList v-if="active === 'list'" @view-details="viewRouteDetails" />
+
+      <!-- 展示 RouteDetails 组件，传递 routeId -->
+      <!-- <RouteDetails v-if="active === 'details'" :routeId="routeId.value" /> -->
+      <RouteDetails v-if="active === 'details' && routeId !== null" :routeId="routeId" />
+
+
     </main>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import RouteSignup from './RouteSignup.vue'; // 引入 RouteSignup 组件
+import RouteSignup from './RouteSignup.vue';
+import AllRouteList from '@/components/AllRouteList.vue'; // 引入 AllRouteList 组件
+import RouteDetails from '@/components/RouteDetails.vue'; // 引入 RouteDetails 组件
+import { nextTick } from 'vue'
 
 const active = ref('');  // 初始时不显示任何内容，等用户点击按钮
+const routeId = ref(null);  // 保存选中的 routeId
+
+// 监听 AllRouteList 组件的事件
+
+
+const viewRouteDetails = (id) => {
+  routeId.value = id
+  nextTick(() => {
+    active.value = 'details'
+  })
+}
 </script>
+
 
   
   <style scoped>

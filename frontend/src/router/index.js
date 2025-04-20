@@ -3,7 +3,7 @@ import Login from '../components/Login.vue'
 import TAmain from '../views/Agency/TAmain.vue'
 import Govmain from '../views/Gov/Govmain.vue'
 import Guidemain from '../views/Guide/Guidemain.vue'
-import Touristmain from '../views/Tourist/Tourist.vue'
+import Touristmain from '../views/Tourist/Touristmain.vue'
 
 
 const routes = [
