@@ -72,7 +72,7 @@
   
         <div class="nav-group">
           <h3>行程管理</h3>
-          <button class="button">安排行程</button>
+          <button @click="active = 'assignGuide'" class="button">指派导游</button> <!-- 新增指派导游按钮 -->
           <button class="button">查看行程</button>
         </div>
       </aside>
@@ -83,6 +83,7 @@
         <!-- 在查看路线时，传递 showDelete 控制删除按钮的显示 -->
         <RouteList v-if="active === 'list'" :showDelete="showDelete" @view-details="viewRouteDetails" />
         <RouteDetails v-if="active === 'details'" :routeId="routeId" /> <!-- 显式传递 routeId -->
+        <AssignGuide v-if="active === 'assignGuide'" /> <!-- 新增指派导游组件 -->
       </main>
     </div>
   </template>
@@ -92,7 +93,8 @@
   import AddRoute from './AddRoute.vue';
   import RouteList from '@/components/RouteList.vue';
   import RouteDetails from '@/components/RouteDetails.vue';
-  
+  import AssignGuide from './AssignGuide.vue'; 
+
   const active = ref('');  // 初始时不显示任何内容，等用户点击按钮
   const routeId = ref(null);  // 保存选中的 routeId
   

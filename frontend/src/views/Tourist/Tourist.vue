@@ -1,41 +1,47 @@
 
 <template>
-    <div class="dashboard"><!--水平布局-->
-      <!-- 左侧导航栏 -->
-      <aside class="sidebar">
-        <h2>游客界面</h2>
-  
-        <div class="nav-group">
-          <h3>旅游路线</h3>
-          <button class="nav-button">路线查看</button>
-        </div>
-  
-        <div class="nav-group">
-          <h3>联系导游</h3>
-          <button class="nav-button">私聊导游</button>
-          <button class="nav-button">团内群聊</button>
-        </div>
-  
-        <div class="nav-group">
-          <h3>我要投诉</h3>
-          <button class="nav-button">投诉</button>
-        </div>
-      </aside>
-  
+  <div class="dashboard">
+    <!-- 左侧导航栏 -->
+    <aside class="sidebar">
+      <h2>游客界面</h2>
 
-      <!-- 右侧内容区 -->
-      <main class="content">
-        <h1>待定内容，会根据左侧按钮展示不同组件？</h1>
+      <div class="nav-group">
+        <h3>旅游路线</h3>
+        <button class="nav-button" @click="active = 'route-signup'">我要报名</button>
+      </div>
+
+      <div class="nav-group">
+        <h3>联系导游</h3>
+        <button class="nav-button">私聊导游</button>
+        <button class="nav-button">团内群聊</button>
+      </div>
+
+      <div class="nav-group">
+        <h3>我要投诉</h3>
+        <button class="nav-button">投诉</button>
+      </div>
+    </aside>
+
+    <!-- 右侧内容区 -->
+    <main class="content">
+      <RouteSignup v-if="active === 'route-signup'" />
+      <div v-if="active !== 'route-signup'">
+        <h1>待定内容，会根据左侧按钮展示不同组件</h1>
         <div class="placeholder-box">
-          <p>功能区内容展示？</p>
+          <p>功能区内容展示</p>
         </div>
-      </main>
-    </div>
-  </template>
-  
-  <script setup>
-  // 暂时无 JS 逻辑
-  </script>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import RouteSignup from './RouteSignup.vue'; // 引入 RouteSignup 组件
+
+const active = ref('');  // 初始时不显示任何内容，等用户点击按钮
+</script>
+
   
   <style scoped>
   .dashboard {
