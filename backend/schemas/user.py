@@ -41,8 +41,6 @@ class UserLoginOut(BaseModel):
         from_attributes = True
 
 
-
-
 class GuideUpdate(BaseModel):
     guide_id:int
     guide_name: Optional[str]
@@ -67,3 +65,10 @@ class TravelAgencyOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+# 通过导游id获取旅社id
+class AgencyIdOut(BaseModel):
+    agency_id: int
+
+    class Config:
+        orm_mode = True

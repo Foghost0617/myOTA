@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
-from backend.schemas.user import GuideUpdate, GuideOut,TravelAgencyOut
+from backend.schemas.user import GuideUpdate, GuideOut,TravelAgencyOut,AgencyIdOut
 from backend.services.guide_service import GuideService
 from backend.core.database import SessionLocal
 from typing import List
@@ -57,5 +57,22 @@ def get_guides(skip: int = 0, limit: int = 10):
                 detail="没有找到导游"
             )
         return guides
+    finally:
+        db.close()
+
+@router.get("/agency/{guide_id}", response_model=AgencyIdOut)
+def get_agency_id(guide_id: int):
+    db: Session = SessionLocal()
+    try:
+        guide_service = GuideService(db)
+        agency_id = guide_service.get_agency_id_by_guide(guide_id)
+
+        if agency_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Guide with ID {guide_id} not found or no agency assigned"
+            )
+
+        return {"agency_id": agency_id}
     finally:
         db.close()

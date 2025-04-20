@@ -60,14 +60,35 @@ def create_route_spots(spots: List[RouteSpotCreate]):
 #     finally:
 #         db.close()
 
+# @router.get("/agency/{agency_id}", response_model=List[RouteOut])
+# def get_routes_by_agency(agency_id: int, skip: int = 0, limit: int = 3):
+#     db: Session = SessionLocal()
+#     try:
+#         # 初始化 RouteService 实例
+#         route_service = RouteService(db)
+#         # 调用 service 层的方法获取路线数据
+#         routes = route_service.get_routes_by_agency(agency_id, skip, limit)
+#         # 如果没有找到相关路线，返回 404 错误
+#         if not routes:
+#             raise HTTPException(
+#                 status_code=status.HTTP_404_NOT_FOUND,
+#                 detail=f"No routes found for agency {agency_id}"
+#             )
+#
+#         # 返回获取到的路线数据
+#         return routes
+#     finally:
+#         # 确保数据库会话被正确关闭
+#         db.close()
+
 @router.get("/agency/{agency_id}", response_model=List[RouteOut])
-def get_routes_by_agency(agency_id: int, skip: int = 0, limit: int = 3):
+def get_routes_by_agency(agency_id: int):
     db: Session = SessionLocal()
     try:
         # 初始化 RouteService 实例
         route_service = RouteService(db)
         # 调用 service 层的方法获取路线数据
-        routes = route_service.get_routes_by_agency(agency_id, skip, limit)
+        routes = route_service.get_routes_by_agency(agency_id)
         # 如果没有找到相关路线，返回 404 错误
         if not routes:
             raise HTTPException(
@@ -82,13 +103,13 @@ def get_routes_by_agency(agency_id: int, skip: int = 0, limit: int = 3):
         db.close()
 
 @router.get("/assign/{agency_id}", response_model=List[RouteOut])
-def get_routes_by_agency(agency_id: int, skip: int = 0,limit: int = 20):
+def get_routes_by_agency(agency_id: int):
     db: Session = SessionLocal()
     try:
         # 初始化 RouteService 实例
         route_service = RouteService(db)
         # 调用 service 层的方法获取路线数据
-        routes = route_service.get_routes_by_agency(agency_id, skip,limit)
+        routes = route_service.get_routes_by_agency(agency_id)
         # 如果没有找到相关路线，返回 404 错误
         if not routes:
             raise HTTPException(

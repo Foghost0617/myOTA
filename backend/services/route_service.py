@@ -51,8 +51,11 @@ class RouteService:
     #
     #     return [RouteOut.from_orm(route) for route in routes] if routes else []
 
-    def get_routes_by_agency(self, agency_id: int, skip: int = 0, limit: int = 3) -> List[RouteOut]:
-            return self.db.query(Route).filter(Route.agency_id == agency_id).offset(skip).limit(limit).all()
+    def get_routes_by_agency(self, agency_id: int) -> List[RouteOut]:
+            return self.db.query(Route).filter(Route.agency_id == agency_id).all()
+
+    # def get_routes_by_agency(self, agency_id: int, skip: int = 0, limit: int = 3) -> List[RouteOut]:
+    #         return self.db.query(Route).filter(Route.agency_id == agency_id).offset(skip).limit(limit).all()
 
     def get_all_routes(self) -> List[Route]:
         routes = self.db.query(Route).all()
