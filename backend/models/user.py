@@ -20,6 +20,8 @@ class Tourist(Base):
     tourist_name = Column(String(50))
     phone = Column(String(20))
 
+    # 反向关系，获取该游客报名的所有路线
+    tourist_routes = relationship("TouristRouteRelation", back_populates="tourist")
     user = relationship("User", backref="tourist", passive_deletes=True)
 
 class Guide(Base):

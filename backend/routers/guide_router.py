@@ -44,3 +44,18 @@ def get_all_agencies():
     finally:
         db.close()
 
+# 获取所有导游
+@router.get("/allguides", response_model=List[GuideOut])
+def get_guides(skip: int = 0, limit: int = 10):
+    db: Session = SessionLocal()
+    try:
+        guide_service = GuideService(db)
+        guides = guide_service.get_guides(skip, limit)
+        if not guides:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="没有找到导游"
+            )
+        return guides
+    finally:
+        db.close()

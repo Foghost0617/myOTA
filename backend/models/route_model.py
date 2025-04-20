@@ -11,6 +11,7 @@ class Route(Base):
     description = Column(String(255))
     agency_id = Column(Integer, ForeignKey("travel_agencies.id"), nullable=False)
     #
+    tourist_routes = relationship("TouristRouteRelation", back_populates="route")
     points = relationship("RouteSpot", back_populates="route", cascade="all, delete-orphan")
     agency = relationship("TravelAgency", back_populates="routes")
 

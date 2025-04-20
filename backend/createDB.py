@@ -4,7 +4,7 @@ import pymysql
 conn = pymysql.connect(
     host='localhost',
     user='root',
-    password='password',
+    password='118211yao',
     charset='utf8mb4',
     autocommit=True
 )
@@ -82,6 +82,48 @@ cursor.execute("USE travel_agency;")
 # );
 # """)
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS tourist_route (
+id INT AUTO_INCREMENT PRIMARY KEY,
+    tourist_id INT NOT NULL,
+    route_id INT NOT NULL,
+    signup_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('待确认', '已确认', '已取消') DEFAULT '待确认',
+    FOREIGN KEY (tourist_id) REFERENCES tourists(id) ON DELETE CASCADE,
+    FOREIGN KEY (route_id) REFERENCES routes(id) ON DELETE CASCADE
+);
+""")
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS route_guides (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    route_id INT,
+    guide_id INT,
+    FOREIGN KEY (route_id) REFERENCES routes(id) ON DELETE CASCADE,
+    FOREIGN KEY (guide_id) REFERENCES guides(id) ON DELETE CASCADE
+);
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS chat_rooms (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    route_id INT,
+    is_private BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (route_id) REFERENCES routes(id) ON DELETE CASCADE
+);
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    room_id INT,
+    sender_id INT,
+    content TEXT,
+    latitude FLOAT,
+    longitude FLOAT,
+    FOREIGN KEY (room_id) REFERENCES chat_rooms(id) ON DELETE CASCADE,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+);
+""")
 
 
 print("数据库和表创建成功")

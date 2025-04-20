@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from backend.models.user import Guide , TravelAgency # 你的 Guide 模型
-from backend.schemas.user import GuideUpdate
+from backend.schemas.user import GuideUpdate,GuideOut
+from typing import List
 
 class GuideService:
     def __init__(self, db: Session):
@@ -22,3 +23,6 @@ class GuideService:
         # 获取所有旅行社
     def get_all_agencies(self):
         return self.db.query(TravelAgency).all()
+
+    def get_guides(self, skip: int = 0, limit: int = 10) -> List[GuideOut]:
+        return self.db.query(Guide).offset(skip).limit(limit).all()

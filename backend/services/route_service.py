@@ -54,9 +54,13 @@ class RouteService:
     def get_routes_by_agency(self, agency_id: int, skip: int = 0, limit: int = 3) -> List[RouteOut]:
             return self.db.query(Route).filter(Route.agency_id == agency_id).offset(skip).limit(limit).all()
 
-        # 获取某条路线的所有景点
-    def get_all_routes(self, skip: int = 0, limit: int = 3) -> List[RouteOut]:
-        return self.db.query(Route).offset(skip).limit(limit).all()
+    def get_all_routes(self) -> List[Route]:
+        routes = self.db.query(Route).all()
+        print(f"返回的数据: {routes}")
+        return routes
+
+
+
 
     def get_route_spots(self, route_id: int) -> List[RouteSpotOut]:
         # 查询并按景点顺序获取某条路线的所有景点
