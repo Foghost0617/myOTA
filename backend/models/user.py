@@ -31,6 +31,7 @@ class Guide(Base):
     phone = Column(String(20))
     agency_id = Column(Integer)
 
+    agency_id = Column(Integer, ForeignKey('travel_agencies.id'))
     user = relationship("User", backref="guide", passive_deletes=True)
 
 class TravelAgency(Base):

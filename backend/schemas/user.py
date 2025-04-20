@@ -40,3 +40,30 @@ class UserLoginOut(BaseModel):
     class Config:
         from_attributes = True
 
+
+
+
+class GuideUpdate(BaseModel):
+    guide_id:int
+    guide_name: Optional[str]
+    phone: Optional[str]
+    agency_id: Optional[int]
+
+class GuideOut(BaseModel):
+    id: int
+    user_id: int
+    guide_name: Optional[str]
+    phone: Optional[str]
+    agency_id: Optional[int]
+
+    class Config:
+        from_attributes = True
+
+# 获取所有旅社？
+class TravelAgencyOut(BaseModel):
+    id: int
+    agency_name: Optional[str]
+    address:Optional [str]
+
+    class Config:
+        from_attributes = True

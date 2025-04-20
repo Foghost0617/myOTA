@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.routers import user_router
-from backend.routers import route_router
+from backend.routers import user_router,route_router,guide_router
 from backend.core.database import engine
 from backend.models import Base
 from fastapi.routing import APIRoute
@@ -21,6 +20,7 @@ Base.metadata.create_all(bind=engine)
 # 搭载
 app.include_router(user_router.router)
 app.include_router(route_router.router)
+app.include_router(guide_router.router)
 
 # 打印所有路由信息
 @app.on_event("startup")
