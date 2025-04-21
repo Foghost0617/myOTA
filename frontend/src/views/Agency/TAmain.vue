@@ -66,7 +66,7 @@
   
         <div class="nav-group">
           <h3>游客管理</h3>
-          <button class="button">处理申请</button>
+          <button class="button" @click="active = 'handleApplications'">处理申请</button>
           <button class="button">游客列表</button>
         </div>
   
@@ -84,6 +84,8 @@
         <RouteList v-if="active === 'list'" :showDelete="showDelete" @view-details="viewRouteDetails" />
         <RouteDetails v-if="active === 'details'" :routeId="routeId" /> <!-- 显式传递 routeId -->
         <AssignGuide v-if="active === 'assignGuide'" /> <!-- 新增指派导游组件 -->
+        <HandleApplications v-if="active === 'handleApplications'" />
+
       </main>
     </div>
   </template>
@@ -94,6 +96,8 @@
   import RouteList from '@/components/RouteList.vue';
   import RouteDetails from '@/components/RouteDetails.vue';
   import AssignGuide from './AssignGuide.vue'; 
+  import HandleApplications from './HandleApplications.vue'
+
 
   const active = ref('');  // 初始时不显示任何内容，等用户点击按钮
   const routeId = ref(null);  // 保存选中的 routeId
