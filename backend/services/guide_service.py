@@ -24,9 +24,11 @@ class GuideService:
     def get_all_agencies(self):
         return self.db.query(TravelAgency).all()
 
+    # 所有导游
     def get_guides(self, skip: int = 0, limit: int = 10) -> List[GuideOut]:
         return self.db.query(Guide).offset(skip).limit(limit).all()
 
+    # 按旅社获取导游
     def get_agency_id_by_guide(self, guide_id: int):
         guide = self.db.query(Guide).filter(Guide.id == guide_id).first()
         return guide.agency_id if guide else None

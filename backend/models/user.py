@@ -20,8 +20,9 @@ class Tourist(Base):
     tourist_name = Column(String(50))
     phone = Column(String(20))
 
-    # 反向关系，获取该游客报名的所有路线
+    # 写的是两边 游客路线中介
     tourist_routes = relationship("TouristRouteRelation", back_populates="tourist")
+
     user = relationship("User", backref="tourist", passive_deletes=True)
 
 class Guide(Base):
@@ -31,9 +32,12 @@ class Guide(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
     guide_name = Column(String(50))
     phone = Column(String(20))
-    agency_id = Column(Integer)
-
+    # agency_id = Column(Integer)
     agency_id = Column(Integer, ForeignKey('travel_agencies.id'))
+
+    # 也许能这样写？
+    assigned_routes=relationship("RouteGuide", back_populates="guide")
+
     user = relationship("User", backref="guide", passive_deletes=True)
 
 class TravelAgency(Base):
@@ -44,7 +48,9 @@ class TravelAgency(Base):
     agency_name = Column(String(100))
     address = Column(String(255))
 
+
     user = relationship("User", backref="agency", passive_deletes=True)
+    # 和路线 一
     routes = relationship("Route", back_populates="agency")
 
 

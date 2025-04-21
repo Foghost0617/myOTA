@@ -81,6 +81,7 @@ def create_route_spots(spots: List[RouteSpotCreate]):
 #         # 确保数据库会话被正确关闭
 #         db.close()
 
+# 找对应旅社的路线？
 @router.get("/agency/{agency_id}", response_model=List[RouteOut])
 def get_routes_by_agency(agency_id: int):
     db: Session = SessionLocal()
@@ -101,7 +102,7 @@ def get_routes_by_agency(agency_id: int):
     finally:
         # 确保数据库会话被正确关闭
         db.close()
-
+#应该和上面一样，但是不记得前端是否都调用了 暂时不删
 @router.get("/assign/{agency_id}", response_model=List[RouteOut])
 def get_routes_by_agency(agency_id: int):
     db: Session = SessionLocal()

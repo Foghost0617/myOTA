@@ -10,5 +10,5 @@ class RouteGuide(Base):
     route_id = Column(Integer, ForeignKey("routes.id", ondelete="CASCADE"), nullable=False)
     guide_id = Column(Integer, ForeignKey("guides.id", ondelete="CASCADE"), nullable=False)
 
-    route = relationship("Route", backref="guide_assignments")
-    guide = relationship("Guide", backref="assigned_routes")
+    route = relationship("Route", back_populates="guide_assignments")
+    guide = relationship("Guide", back_populates="assigned_routes")

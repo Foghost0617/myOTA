@@ -11,10 +11,17 @@ class Route(Base):
     description = Column(String(255))
     agency_id = Column(Integer, ForeignKey("travel_agencies.id"), nullable=False)
     #
+
+    # 路线和游客 中介表 这里写的是两边
     tourist_routes = relationship("TouristRouteRelation", back_populates="route")
+
+    # 和景点 一
     points = relationship("RouteSpot", back_populates="route", cascade="all, delete-orphan")
+    # 和旅社 多
     agency = relationship("TravelAgency", back_populates="routes")
 
+    #也许可以这样？
+    guide_assignments=relationship("RouteGuide",back_populates="route")
 
 # 路线景点表
 class RouteSpot(Base):
@@ -28,5 +35,6 @@ class RouteSpot(Base):
     longitude = Column(Float, nullable=False)
     sequence = Column(Integer, nullable=False)
 
+    # 和路线 多
     route = relationship("Route", back_populates="points")
 

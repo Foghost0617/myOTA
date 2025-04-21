@@ -12,6 +12,10 @@ class TouristRouteRelation(Base):
     signup_date = Column(TIMESTAMP, server_default=func.now())
     status = Column(Enum('待确认', '已确认', '已取消', name='status_enum'), default='待确认')
 
-    # Relationships to link with tourist and route
+    #
     tourist = relationship("Tourist", back_populates="tourist_routes")
     route = relationship("Route", back_populates="tourist_routes")
+
+
+
+

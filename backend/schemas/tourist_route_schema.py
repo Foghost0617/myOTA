@@ -2,6 +2,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
+from typing import Literal
 
 
 class TouristRouteCreate(BaseModel):
@@ -22,3 +23,7 @@ class TouristRouteOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+# 用于审批的schema
+class TouristRouteStatusUpdate(BaseModel):
+    status: Literal['待确认', '已确认', '已取消']

@@ -1,10 +1,11 @@
 
 from fastapi import APIRouter, HTTPException, status,Depends, Query
 from sqlalchemy.orm import Session
-from backend.schemas.tourist_route_schema import TouristRouteOut,TouristRouteCreate
+from backend.schemas.tourist_route_schema import TouristRouteOut,TouristRouteCreate,TouristRouteStatusUpdate
 from backend.services.tourist_route_service import TouristRouteService
 from backend.core.database import SessionLocal  # 直接导入SessionLocal
 from typing import List
+from fastapi import Body
 from backend.models.route_model import RouteSpot  # 导入 ORM 模型类
 
 router = APIRouter(
@@ -27,34 +28,92 @@ def signup_route_for_tourist(tourist_route: TouristRouteCreate):
     finally:
         db.close()
 
-# 获取某条路线的所有报名游客
-@router.get("/route/{route_id}/tourists", response_model=List[TouristRouteOut])
-def get_tourists_by_route(route_id: int):
+
+# 获取某个旅行社所有报名记录
+@router.get("/agency/{agency_id}/enrollments", response_model=List[TouristRouteOut])
+def get_applications_by_agency(agency_id: int):
     db: Session = SessionLocal()
     try:
         tourist_route_service = TouristRouteService(db)
-        tourists = tourist_route_service.get_signed_up_tourists(route_id)
-        if not tourists:
+        applications = tourist_route_service.get_applications_by_agency(agency_id)
+        if not applications:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="没有找到报名此路线的游客"
+                detail="没有找到任何报名记录"
             )
-        return tourists
+        return applications
     finally:
         db.close()
 
-# 获取某个游客报名的所有路线
-@router.get("/tourist/{tourist_id}/routes", response_model=List[TouristRouteOut])
-def get_routes_by_tourist(tourist_id: int):
+# 更新游客报名记录的状态
+@router.put("/enrollment/{application_id}/status", response_model=TouristRouteOut)
+def update_application_status(application_id: int, status_update: TouristRouteStatusUpdate):
     db: Session = SessionLocal()
     try:
         tourist_route_service = TouristRouteService(db)
-        routes = tourist_route_service.get_tourist_routes(tourist_id)
-        if not routes:
+        updated_application = tourist_route_service.update_application_status(
+            application_id, status_update.status
+        )
+        if not updated_application:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="没有找到该游客报名的路线"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="无法更新报名记录状态"
             )
-        return routes
+        return updated_application
     finally:
         db.close()
+
+# @router.put("/enrollment/{application_id}/status", response_model=TouristRouteOut)
+# def update_application_status(
+#     application_id: int,
+#     status_update: TouristRouteStatusUpdate = Body(...)
+# ):
+#     db: Session = SessionLocal()
+#     try:
+#         tourist_route_service = TouristRouteService(db)
+#         updated_application = tourist_route_service.update_application_status(
+#             application_id, status_update.status
+#         )
+#         if not updated_application:
+#             raise HTTPException(
+#                 status_code=status.HTTP_400_BAD_REQUEST,
+#                 detail="无法更新报名记录状态"
+#             )
+#         return updated_application
+#     finally:
+#         db.close()
+
+
+
+#
+# # 获取某条路线的所有报名游客
+# @router.get("/route/{route_id}/tourists", response_model=List[TouristRouteOut])
+# def get_tourists_by_route(route_id: int):
+#     db: Session = SessionLocal()
+#     try:
+#         tourist_route_service = TouristRouteService(db)
+#         tourists = tourist_route_service.get_signed_up_tourists(route_id)
+#         if not tourists:
+#             raise HTTPException(
+#                 status_code=status.HTTP_404_NOT_FOUND,
+#                 detail="没有找到报名此路线的游客"
+#             )
+#         return tourists
+#     finally:
+#         db.close()
+#
+# # 获取某个游客报名的所有路线
+# @router.get("/tourist/{tourist_id}/routes", response_model=List[TouristRouteOut])
+# def get_routes_by_tourist(tourist_id: int):
+#     db: Session = SessionLocal()
+#     try:
+#         tourist_route_service = TouristRouteService(db)
+#         routes = tourist_route_service.get_tourist_routes(tourist_id)
+#         if not routes:
+#             raise HTTPException(
+#                 status_code=status.HTTP_404_NOT_FOUND,
+#                 detail="没有找到该游客报名的路线"
+#             )
+#         return routes
+#     finally:
+#         db.close()
