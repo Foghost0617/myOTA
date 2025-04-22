@@ -18,7 +18,7 @@
 
       <div class="nav-group">
         <h3>游客管理</h3>
-        <button class="nav-button">联系游客</button>
+        <button class="nav-button" @click="active = 'tourists'">查看游客</button>
         <button class="nav-button">群聊管理</button>
       </div>
     </aside>
@@ -27,6 +27,7 @@
     <main class="content">
       <CompleteGuideInfo v-if="active === 'completeInfo'" />
       <RouteList v-if="active === 'list'" :showDelete="showDelete" @view-details="viewRouteDetails" />
+      <myTouristList v-if="active === 'tourists'" />
       <RouteDetails v-if="active === 'details'" :routeId="routeId" /> <!-- 显式传递 routeId -->
     </main>
   </div>
@@ -37,6 +38,7 @@ import { ref } from 'vue'
 import CompleteGuideInfo from './CompleteInfo.vue'
 import RouteList from '@/components/RouteList.vue';  // 引入 RouteList 组件
 import RouteDetails from '@/components/RouteDetails.vue';  // 引入 RouteDetails 组件
+import myTouristList from './myTouristList.vue' // ✅ 新增
 
 const active = ref('');  // 默认不显示任何内容
 const routeId = ref(null);  // 保存选中的 routeId
