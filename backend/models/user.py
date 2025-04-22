@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from backend.core.database import Base
 from datetime import datetime
-
+from pydantic import BaseModel
 
 class User(Base):
     __tablename__ = 'users'
