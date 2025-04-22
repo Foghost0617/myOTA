@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
-from backend.models.user import Guide , TravelAgency # 你的 Guide 模型
+from backend.models.user import Guide , TravelAgency,Tourist
+from backend.models.tourist_route_model import TouristRouteRelation
+from backend.models.route_guide import RouteGuide
 from backend.schemas.user import GuideUpdate,GuideOut
 from typing import List
 
@@ -32,3 +34,24 @@ class GuideService:
     def get_agency_id_by_guide(self, guide_id: int):
         guide = self.db.query(Guide).filter(Guide.id == guide_id).first()
         return guide.agency_id if guide else None
+
+    def get_tourists_by_guide_id(self, guide_id: int):
+        # 1. 获取导游负责的路线 ID
+        route_ids = self.db.query(RouteGuide.route_id).filter_by(guide_id=guide_id).all()
+        route_ids = [r.route_id for r in route_ids]
+
+        if not route_ids:
+            return []
+
+        # 2. 获取所有游客 ID
+        tourist_ids = self.db.query(TouristRouteRelation.tourist_id)\
+            .filter(TouristRouteRelation.route_id.in_(route_ids))\
+            .distinct().all()
+
+        tourist_ids = [t.tourist_id for t in tourist_ids]
+        if not tourist_ids:
+            return []
+
+
+        tourists = self.db.query(Tourist).filter(Tourist.id.in_(tourist_ids)).all()
+        return tourists

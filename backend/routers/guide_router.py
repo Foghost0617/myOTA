@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
-from backend.schemas.user import GuideUpdate, GuideOut,TravelAgencyOut,AgencyIdOut
+from backend.schemas.user import GuideUpdate, GuideOut,TravelAgencyOut,AgencyIdOut,TouristBasic
 from backend.services.guide_service import GuideService
 from backend.core.database import SessionLocal
 from typing import List
@@ -74,5 +74,24 @@ def get_agency_id(guide_id: int):
             )
 
         return {"agency_id": agency_id}
+    finally:
+        db.close()
+
+
+
+@router.get("/{guide_id}/tourists", response_model=list[TouristBasic])
+def get_tourists_by_guide(guide_id: int):
+    db: Session = SessionLocal()
+    try:
+        guide_service = GuideService(db)
+        tourists = guide_service.get_tourists_by_guide_id(guide_id)
+
+        if not tourists:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"No tourists found for guide ID {guide_id}"
+            )
+
+        return tourists
     finally:
         db.close()
