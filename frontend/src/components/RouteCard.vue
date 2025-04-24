@@ -4,10 +4,13 @@
     <p>{{ route.description }}</p>
     <div class="buttons">
       <button @click="$emit('view-details', route.id)">查看详情</button>
-      <button v-if="showDelete" @click="$emit('delete', route.id)" class="delete-button">删除</button>
+      <!-- RouteCard.vue -->
+      <button v-if="showDelete" @click="$emit('delete-route', route.id)" class="delete-button">删除</button>
+
     </div>
   </div>
 </template>
+
 
 <script>
 export default {
