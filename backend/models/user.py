@@ -25,6 +25,10 @@ class Tourist(Base):
 
     user = relationship("User", backref="tourist", passive_deletes=True)
 
+    # models/tourist.py 中的 Tourist 类
+    complaints = relationship("Complaint", back_populates="tourist", cascade="all, delete-orphan")
+
+
 class Guide(Base):
     __tablename__ = 'guides'
 

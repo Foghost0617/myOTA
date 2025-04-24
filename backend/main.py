@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.routers import user_router,route_router,guide_router,route_guide,tourist_route_router,chat_router
+from backend.routers import user_router,route_router,guide_router,route_guide,tourist_route_router,chat_router,complaints_router
 from backend.core.database import engine
 from backend.models import Base
 from fastapi.routing import APIRoute
@@ -25,6 +25,7 @@ app.include_router(guide_router.router)
 app.include_router(route_guide.router)
 app.include_router(chat_router.router)
 app.include_router(tourist_route_router.router)
+app.include_router(complaints_router.router)
 
 @app.on_event("startup")
 async def print_routes():
