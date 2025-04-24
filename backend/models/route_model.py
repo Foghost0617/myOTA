@@ -13,7 +13,8 @@ class Route(Base):
     #
 
     # 路线和游客 中介表 这里写的是两边
-    tourist_routes = relationship("TouristRouteRelation", back_populates="route")
+    # tourist_routes = relationship("TouristRouteRelation", back_populates="route")
+    tourist_routes = relationship("TouristRouteRelation", back_populates="route", cascade="all, delete-orphan", passive_deletes=True)
 
     # 和景点 一
     points = relationship("RouteSpot", back_populates="route", cascade="all, delete-orphan")
@@ -22,6 +23,8 @@ class Route(Base):
 
     #也许可以这样？
     guide_assignments=relationship("RouteGuide",back_populates="route")
+
+
 
 # 路线景点表
 class RouteSpot(Base):

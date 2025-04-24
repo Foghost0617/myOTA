@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import List
 from backend.models.route_model import Route, RouteSpot
+from backend.models.tourist_route_model import TouristRouteRelation
 from backend.schemas.route_schema import RouteCreate, RouteOut, RouteSpotCreate,RouteSpotOut
 
 
@@ -72,14 +73,33 @@ class RouteService:
 
 
 
-    def delete_route(self, route_id: int):
-        route = self.db.query(Route).filter(Route.id == route_id).first()
-        if route:
-            self.db.delete(route)
-            self.db.commit()
-            return {"message": f"Route {route_id} deleted successfully"}
-        else:
-            return None  # 不存在时返回 None，让路由层处理
+    # def delete_route(self, route_id: int):
+    #     route = self.db.query(Route).filter(Route.id == route_id).first()
+    #     if route:
+    #         self.db.delete(route)
+    #         self.db.commit()
+    #         return {"message": f"Route {route_id} deleted successfully"}
+    #     else:
+    #         return None  # 不存在时返回 None，让路由层处理
+
+    def delete_route(self, route_id: int) -> bool:
+        # 先删除关联的游客记录
+        self.db.query(TouristRouteRelation).filter_by(route_id=route_id).delete(synchronize_session=False)
+
+        # 删除所有景点
+        self.db.query(RouteSpot).filter_by(route_id=route_id).delete(synchronize_session=False)
+
+        # 删除路线本身
+        route = self.db.query(Route).filter_by(id=route_id).first()
+        if not route:
+            return False
+
+        self.db.delete(route)
+        self.db.commit()
+        return True
+
+
+
 
 
 

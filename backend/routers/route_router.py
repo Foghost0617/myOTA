@@ -183,22 +183,36 @@ def get_route_spots(route_id: int):
     finally:
         db.close()
 
+#
+# @router.delete("/del/{route_id}")
+# def delete_route(route_id: int):
+#     db: Session = SessionLocal()
+#     try:
+#         print(f"Deleting route with ID: {route_id}")
+#         route_service = RouteService(db)
+#         result = route_service.delete_route(route_id)
+#         if result:
+#             return {"message": f"Route {route_id} deleted successfully"}
+#         else:
+#             print(f"Route {route_id} not found in the database")
+#             raise HTTPException(
+#                 status_code=status.HTTP_404_NOT_FOUND,
+#                 detail=f"Route {route_id} not found"
+#             )
+#     finally:
+#         db.close()
 
 @router.delete("/del/{route_id}")
 def delete_route(route_id: int):
     db: Session = SessionLocal()
     try:
-        print(f"Deleting route with ID: {route_id}")
         route_service = RouteService(db)
-        result = route_service.delete_route(route_id)
-        if result:
-            return {"message": f"Route {route_id} deleted successfully"}
-        else:
-            print(f"Route {route_id} not found in the database")
+        success = route_service.delete_route(route_id)
+        if not success:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Route {route_id} not found"
+                detail=f"Route with id {route_id} not found or could not be deleted"
             )
+        return {"message": f"Route {route_id} deleted successfully"}
     finally:
         db.close()
-
