@@ -12,7 +12,7 @@
 
       <div class="nav-group">
         <h3>联系导游</h3>
-        <button class="nav-button">私聊导游</button>
+        <button class="nav-button" @click="active = 'guides'">查看导游</button> <!-- 添加按钮 -->
         <button class="nav-button">团内群聊</button>
       </div>
 
@@ -33,6 +33,14 @@
       <!-- <RouteDetails v-if="active === 'details'" :routeId="routeId.value" /> -->
       <RouteDetails v-if="active === 'details' && routeId !== null" :routeId="routeId" />
 
+      <!-- 展示 AllGuides 组件 -->
+      <AllGuides v-if="active === 'guides'"@start-chat="selectGuideForChat " />
+
+      <ChatBox v-if="active === 'chatGuide'" 
+        :sender-role="1" 
+        :sender-id="touristId" 
+        :receiver-role="2" 
+        :receiver-id="selectedGuideId" />
 
     </main>
   </div>
@@ -43,10 +51,14 @@ import { ref } from 'vue';
 import RouteSignup from './RouteSignup.vue';
 import AllRouteList from '@/components/AllRouteList.vue'; // 引入 AllRouteList 组件
 import RouteDetails from '@/components/RouteDetails.vue'; // 引入 RouteDetails 组件
+import AllGuides from './AllGuides.vue'; // 引入 AllGuides 组件
+import ChatBox from '@/components/ChatBox.vue'
 import { nextTick } from 'vue'
 
 const active = ref('');  // 初始时不显示任何内容，等用户点击按钮
 const routeId = ref(null);  // 保存选中的 routeId
+const selectedGuideId = ref(null);  // ⬅️ 加上这句就能解决问题
+const touristId = localStorage.getItem('tourist_id');  // 导游的 ID
 
 // 监听 AllRouteList 组件的事件
 
@@ -56,6 +68,12 @@ const viewRouteDetails = (id) => {
   nextTick(() => {
     active.value = 'details'
   })
+}
+
+// 选择游客进行聊天
+const selectGuideForChat = (guideId) => {
+  selectedGuideId.value = guideId;
+  active.value = 'chatGuide';  // 切换到聊天界面
 }
 </script>
 

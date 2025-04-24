@@ -19,7 +19,7 @@
       <div class="nav-group">
         <h3>游客管理</h3>
         <button class="nav-button" @click="active = 'tourists'">查看游客</button>
-        <button class="nav-button">群聊管理</button>
+        
       </div>
     </aside>
 
@@ -27,8 +27,15 @@
     <main class="content">
       <CompleteGuideInfo v-if="active === 'completeInfo'" />
       <RouteList v-if="active === 'list'" :showDelete="showDelete" @view-details="viewRouteDetails" />
-      <myTouristList v-if="active === 'tourists'" />
-      <RouteDetails v-if="active === 'details'" :routeId="routeId" /> <!-- 显式传递 routeId -->
+      <myTouristList v-if="active === 'tourists'" @start-chat="selectTouristForChat" />
+      <RouteDetails v-if="active === 'details'" :routeId="routeId" />
+      <ChatBox v-if="active === 'chatTourist'" 
+        :sender-role="2" 
+        :sender-id="guideId" 
+        :receiver-role="1" 
+        :receiver-id="selectedTouristId" />
+
+
     </main>
   </div>
 </template>
@@ -36,23 +43,32 @@
 <script setup>
 import { ref } from 'vue'
 import CompleteGuideInfo from './CompleteInfo.vue'
-import RouteList from '@/components/RouteList.vue';  // 引入 RouteList 组件
-import RouteDetails from '@/components/RouteDetails.vue';  // 引入 RouteDetails 组件
-import myTouristList from './myTouristList.vue' // ✅ 新增
+import RouteList from '@/components/RouteList.vue'
+import RouteDetails from '@/components/RouteDetails.vue'
+import myTouristList from './myTouristList.vue'
+import ChatBox from '@/components/ChatBox.vue'
 
-const active = ref('');  // 默认不显示任何内容
-const routeId = ref(null);  // 保存选中的 routeId
+const active = ref('');  // 当前显示的内容
+const routeId = ref(null);  // 当前选中的路线 ID
+const showDelete = ref(false);  // 控制删除按钮
+const guideId = localStorage.getItem('guide_id');  // 导游的 ID
+const selectedTouristId = ref(null);  // 当前选中的游客 ID
 
-// 判定是否显示删除按钮（假设导游不能删除）
-const showDelete = ref(false);  // 控制删除按钮的显示
-
-// 切换到查看详情页面，并传递 routeId
+// 切换到查看路线详情页面
 const viewRouteDetails = (id) => {
-  console.log('从routelist接收到 routeId:', id);  // 检查传入的 routeId
-  active.value = 'details';  // 切换到详情页面
-  routeId.value = id;  // 设置选中的 routeId
-};
+  active.value = 'details';
+  routeId.value = id;
+}
+
+// 选择游客进行聊天
+const selectTouristForChat = (touristId) => {
+  selectedTouristId.value = touristId;
+  active.value = 'chatTourist';  // 切换到聊天界面
+}
+
+
 </script>
+
 
 
   
