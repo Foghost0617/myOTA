@@ -16,10 +16,15 @@
         <button class="nav-button">团内群聊</button>
       </div>
 
+      
+  
       <div class="nav-group">
-        <h3>我要投诉</h3>
-        <button class="nav-button">投诉</button>
+      <h3>我要投诉</h3>
+      <button class="nav-button" @click="active = 'complaint'">投诉</button>
       </div>
+
+
+      
     </aside>
 
     <!-- 右侧内容区 -->
@@ -42,6 +47,10 @@
         :receiver-role="2" 
         :receiver-id="selectedGuideId" />
 
+        <SubmitComplaint v-if="active === 'complaint'" />
+
+
+
     </main>
   </div>
 </template>
@@ -52,6 +61,8 @@ import RouteSignup from './RouteSignup.vue';
 import AllRouteList from '@/components/AllRouteList.vue'; // 引入 AllRouteList 组件
 import RouteDetails from '@/components/RouteDetails.vue'; // 引入 RouteDetails 组件
 import AllGuides from './AllGuides.vue'; // 引入 AllGuides 组件
+import SubmitComplaint from './SubmitComplaint.vue'
+
 import ChatBox from '@/components/ChatBox.vue'
 import { nextTick } from 'vue'
 

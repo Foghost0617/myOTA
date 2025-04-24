@@ -12,7 +12,8 @@
   
         <div class="nav-group">
           <h3>游客投诉</h3>
-          <button class="nav-button">查看投诉</button>
+          <button @click="active = 'complaints'">查看投诉</button>
+
         </div>
   
       </aside>
@@ -22,15 +23,19 @@
       <main class="content">
         <h1>待定内容，会根据左侧按钮展示不同组件？</h1>
         <div class="placeholder-box">
-          <p>功能区内容展示？</p>
+          <ComplaintList v-if="active === 'complaints'" />
         </div>
       </main>
     </div>
   </template>
   
   <script setup>
-  // 暂时无 JS 逻辑
+  import { ref } from 'vue'
+  import ComplaintList from './ComplaintList.vue'  // 路径按实际调整
+  
+  const active = ref('')  // ⬅️ 这是关键，记录当前激活的模块
   </script>
+  
   
   <style scoped>
   .dashboard {
