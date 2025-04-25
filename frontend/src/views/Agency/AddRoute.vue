@@ -292,6 +292,7 @@
       alert(err.response?.data?.detail || '路线创建失败')
     }
   }
+
   
   // 提交景点信息
   const submitRouteSpots = async () => {

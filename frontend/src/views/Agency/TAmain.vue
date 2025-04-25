@@ -62,6 +62,7 @@
           <h3>路线管理</h3>
           <button @click="active = 'add'" class="button">添加路线</button>
           <button @click="active = 'list'" class="button">查看路线</button>
+          <button @click="active = 'uploadImage'" class="button">添加景点图像</button>
         </div>
   
         <div class="nav-group">
@@ -85,7 +86,7 @@
         <RouteDetails v-if="active === 'details'" :routeId="routeId" /> <!-- 显式传递 routeId -->
         <AssignGuide v-if="active === 'assignGuide'" /> <!-- 新增指派导游组件 -->
         <HandleApplications v-if="active === 'handleApplications'" />
-
+        <UploadSpotImage v-if="active === 'uploadImage'" />
       </main>
     </div>
   </template>
@@ -97,6 +98,7 @@
   import RouteDetails from '@/components/RouteDetails.vue';
   import AssignGuide from './AssignGuide.vue'; 
   import HandleApplications from './HandleApplications.vue'
+  import  UploadSpotImage from './UploadSpotImage.vue'
 
 
   const active = ref('');  // 初始时不显示任何内容，等用户点击按钮
