@@ -37,6 +37,7 @@ class RouteSpot(Base):
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     sequence = Column(Integer, nullable=False)
+    image_url = Column(String(255), nullable=True)
 
     # 和路线 多
     route = relationship("Route", back_populates="points")

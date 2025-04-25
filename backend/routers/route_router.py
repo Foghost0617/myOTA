@@ -5,6 +5,12 @@ from backend.services.route_service import RouteService
 from backend.core.database import SessionLocal  # 直接导入SessionLocal
 from typing import List
 from backend.models.route_model import RouteSpot  # 导入 ORM 模型类
+from fastapi import UploadFile, File, APIRouter, HTTPException
+
+import os
+from uuid import uuid4
+from sqlalchemy.orm import Session
+
 
 router = APIRouter(
     prefix="/routes",  # 路由前缀
@@ -230,5 +236,75 @@ def get_enrollment_count(route_id: int):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=str(e)
         )
+    finally:
+        db.close()
+
+
+
+# @router.post("/spot_images/{spot_id}")
+# async def upload_spot_image(spot_id: int, file: UploadFile = File(...)):
+#     db: Session = SessionLocal()
+#     try:
+#         # 创建保存目录
+#         save_dir = "static/spot_images"
+#         os.makedirs(save_dir, exist_ok=True)
+#
+#         # 获取文件扩展名
+#         ext = os.path.splitext(file.filename)[-1]
+#         # 防止重复名，生成唯一文件名
+#         filename = f"{uuid4().hex}{ext}"
+#         file_path = os.path.join(save_dir, filename)
+#
+#         # 保存文件
+#         with open(file_path, "wb") as f:
+#             content = await file.read()
+#             f.write(content)
+#
+#         # 更新数据库中的 image_url 字段
+#         image_url = f"/{file_path}"  # 可视路径，前端访问用
+#
+#
+#         route_service = RouteService(db)
+#         success = route_service.update_spot_image_url(spot_id, image_url)
+#
+#         if not success:
+#             raise HTTPException(status_code=404, detail="景点不存在或更新失败")
+#
+#         return {"message": "上传成功", "image_url": image_url}
+#
+#     finally:
+#         db.close()
+
+@router.post("/spot_images/{spot_id}")
+async def upload_spot_image(spot_id: int, file: UploadFile = File(...)):
+    db: Session = SessionLocal()
+    try:
+        # 创建保存目录
+        save_dir = "static/spot_images"
+        os.makedirs(save_dir, exist_ok=True)
+
+        # 获取文件扩展名
+        ext = os.path.splitext(file.filename)[-1]
+        # 防止重复名，生成唯一文件名
+        filename = f"{uuid4().hex}{ext}"
+        file_path = os.path.join(save_dir, filename)
+
+        # 保存文件
+        with open(file_path, "wb") as f:
+            content = await file.read()
+            f.write(content)
+
+        # 更新数据库中的 image_url 字段，确保返回路径格式正确
+        image_url = f"/static/spot_images/{filename}"  # 修改为正确的可视路径
+
+        # 更新数据库
+        route_service = RouteService(db)
+        success = route_service.update_spot_image_url(spot_id, image_url)
+
+        if not success:
+            raise HTTPException(status_code=404, detail="景点不存在或更新失败")
+
+        return {"message": "上传成功", "image_url": image_url}
+
     finally:
         db.close()

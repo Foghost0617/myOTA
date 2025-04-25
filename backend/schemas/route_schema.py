@@ -11,6 +11,7 @@ class RouteSpotBase(BaseModel):
     latitude: float
     longitude: float
     sequence: int
+    image_url: Optional[str] = None  # 新增字段，图片可选
 
 # 前端给的数据
 class RouteSpotCreate(RouteSpotBase):

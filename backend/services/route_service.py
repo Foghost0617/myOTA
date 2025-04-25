@@ -37,7 +37,8 @@ class RouteService:
                 description=spot.description,
                 latitude=spot.latitude,
                 longitude=spot.longitude,
-                sequence=spot.sequence
+                sequence=spot.sequence,
+                image_url = spot.image_url
             )
             db_spots.append(db_spot)
 
@@ -122,6 +123,12 @@ class RouteService:
 
 
 
-
-
+    # 上传图像
+    def update_spot_image_url(self, spot_id: int, image_url: str) -> bool:
+        spot = self.db.query(RouteSpot).filter(RouteSpot.id == spot_id).first()
+        if not spot:
+            return False
+        spot.image_url = image_url
+        self.db.commit()
+        return True
 
