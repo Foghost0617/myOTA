@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status,Depends, Query
 from sqlalchemy.orm import Session
-from backend.schemas.route_schema import RouteCreate, RouteOut, RouteSpotCreate,RouteSpotOut
+from backend.schemas.route_schema import RouteCreate, RouteOut, RouteSpotCreate, RouteSpotOut, RouteEnrollmentCountOut
 from backend.services.route_service import RouteService
 from backend.core.database import SessionLocal  # 直接导入SessionLocal
 from typing import List
@@ -214,5 +214,21 @@ def delete_route(route_id: int):
                 detail=f"Route with id {route_id} not found or could not be deleted"
             )
         return {"message": f"Route {route_id} deleted successfully"}
+    finally:
+        db.close()
+
+
+@router.get("/enrollment-count/{route_id}", response_model=RouteEnrollmentCountOut)
+def get_enrollment_count(route_id: int):
+    db: Session = SessionLocal()
+    try:
+        route_service = RouteService(db)
+        result = route_service.get_enrollment_count_info(route_id)
+        return result
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
     finally:
         db.close()

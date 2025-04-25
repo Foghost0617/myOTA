@@ -39,3 +39,13 @@ class RouteOut(RouteBase):
         from_attributes = True
 
 
+
+
+
+class RouteEnrollmentCountOut(BaseModel):
+    route_id: int
+    route_name: str
+    count: int
+
+    class Config:
+        from_attributes = True

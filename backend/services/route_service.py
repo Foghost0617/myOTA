@@ -1,8 +1,11 @@
+from http.client import HTTPException
+
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from typing import List
 from backend.models.route_model import Route, RouteSpot
 from backend.models.tourist_route_model import TouristRouteRelation
-from backend.schemas.route_schema import RouteCreate, RouteOut, RouteSpotCreate,RouteSpotOut
+from backend.schemas.route_schema import RouteCreate, RouteOut, RouteSpotCreate, RouteSpotOut, RouteEnrollmentCountOut
 
 
 class RouteService:
@@ -63,6 +66,24 @@ class RouteService:
         print(f"返回的数据: {routes}")
         return routes
 
+
+
+    def get_enrollment_count_info(self, route_id: int) -> RouteEnrollmentCountOut:
+        # 查找路线
+        route = self.db.query(Route).filter(Route.id == route_id).first()
+        if not route:
+            raise ValueError("路线不存在")
+
+        # 统计报名人数
+        count = self.db.query(func.count()).select_from(TouristRouteRelation).filter(
+            TouristRouteRelation.route_id == route_id
+        ).scalar()
+
+        return RouteEnrollmentCountOut(
+            route_id=route.id,
+            route_name=route.name,
+            count=count
+        )
 
 
 
