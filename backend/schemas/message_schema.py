@@ -1,4 +1,6 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
+from sqlalchemy import Column, Integer, String, Text, Boolean, Float, DateTime, func
+
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -12,8 +14,17 @@ class MessageOut(BaseModel):
     timestamp: datetime
     is_group: bool
 
+    is_location: bool = False
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+
+    # ✅ 新增字段
+    location_owner_id: Optional[int] = None
+    location_owner_role: Optional[int] = None
+
     class Config:
         orm_mode = True
+        from_attributes = True  # 添加这一行
 
 # 前端发来
 class GroupMessageIn(BaseModel):
