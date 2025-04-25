@@ -328,6 +328,7 @@
         // 判断用的是 agency_id 还是 guide_id
         if (localAgencyId !== 0) {
           this.agencyId = localAgencyId;
+          console.log('查看路线，旅行社id：',localAgencyId)
           this.fetchRoutes();
         } else if (localGuideId !== 0) {
           try {

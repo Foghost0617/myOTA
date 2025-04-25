@@ -7,7 +7,7 @@
   
         <div class="nav-group">
           <h3>运营情况</h3>
-          <button class="nav-button">查看情况</button>
+          <button @click="active = 'enrollments'">查看路线报名</button>
         </div>
   
         <div class="nav-group">
@@ -24,6 +24,7 @@
         <h1>待定内容，会根据左侧按钮展示不同组件？</h1>
         <div class="placeholder-box">
           <ComplaintList v-if="active === 'complaints'" />
+          <RouteEnrollmentCount v-if="active === 'enrollments'" /> <!-- 新增模块 -->
         </div>
       </main>
     </div>
@@ -32,7 +33,7 @@
   <script setup>
   import { ref } from 'vue'
   import ComplaintList from './ComplaintList.vue'  // 路径按实际调整
-  
+  import RouteEnrollmentCount from './RouteEnrollmentCount.vue'
   const active = ref('')  // ⬅️ 这是关键，记录当前激活的模块
   </script>
   
