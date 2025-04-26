@@ -67,6 +67,7 @@
   
         <div class="nav-group">
           <h3>游客管理</h3>
+          <button @click="active = 'createGroupChat'">创建群聊</button>
           <button class="button" @click="active = 'handleApplications'">处理申请</button>
           <button class="button">游客列表</button>
         </div>
@@ -87,6 +88,11 @@
         <AssignGuide v-if="active === 'assignGuide'" /> <!-- 新增指派导游组件 -->
         <HandleApplications v-if="active === 'handleApplications'" />
         <UploadSpotImage v-if="active === 'uploadImage'" />
+        <CreateGroupChat 
+            v-if="active === 'createGroupChat'" 
+            :creator-id="creatorId" 
+            :creator-role="creatorRole" 
+          />
       </main>
     </div>
   </template>
@@ -99,6 +105,8 @@
   import AssignGuide from './AssignGuide.vue'; 
   import HandleApplications from './HandleApplications.vue'
   import  UploadSpotImage from './UploadSpotImage.vue'
+  import CreateGroupChat from '@/components/CreateGroupChat.vue';
+
 
 
   const active = ref('');  // 初始时不显示任何内容，等用户点击按钮
@@ -113,6 +121,15 @@
     active.value = 'details';
     routeId.value = id;
   };
+  const agencyId= parseInt(localStorage.getItem('agency_id') || '0');
+  const role = parseInt(localStorage.getItem('role') || '0');
+  console.log('当前角色id：',agencyId)
+  console.log('当前角色role：',role)
+  const userId = localStorage.getItem('user_id'||'0');  // 导游的 ID
+  const creatorId = userId
+  const creatorRole = parseInt(localStorage.getItem('role') || '0');
+
+
   </script>
   
 

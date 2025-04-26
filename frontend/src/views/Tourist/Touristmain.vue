@@ -69,7 +69,10 @@ import { nextTick } from 'vue'
 const active = ref('');  // 初始时不显示任何内容，等用户点击按钮
 const routeId = ref(null);  // 保存选中的 routeId
 const selectedGuideId = ref(null);  // ⬅️ 加上这句就能解决问题
-const touristId = localStorage.getItem('tourist_id');  // 导游的 ID
+const touristId = localStorage.getItem('tourist_id'||'0');  
+const role = parseInt(localStorage.getItem('role') || '0');
+  console.log('当前角色id：',touristId)
+  console.log('当前角色role：',role)
 
 // 监听 AllRouteList 组件的事件
 

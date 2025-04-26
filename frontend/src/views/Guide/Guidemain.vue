@@ -19,6 +19,7 @@
       <div class="nav-group">
         <h3>游客管理</h3>
         <button class="nav-button" @click="active = 'tourists'">查看游客</button>
+        <button @click="active = 'createGroupChat'">创建群聊</button>
         
       </div>
     </aside>
@@ -34,7 +35,11 @@
         :sender-id="guideId" 
         :receiver-role="1" 
         :receiver-id="selectedTouristId" />
-
+        <CreateGroupChat 
+            v-if="active === 'createGroupChat'" 
+            :creator-id="creatorId" 
+            :creator-role="creatorRole" 
+          />
 
     </main>
   </div>
@@ -47,12 +52,24 @@ import RouteList from '@/components/RouteList.vue'
 import RouteDetails from '@/components/RouteDetails.vue'
 import myTouristList from './myTouristList.vue'
 import ChatBox from '@/components/ChatBox.vue'
+import CreateGroupChat from '@/components/CreateGroupChat.vue';
 
 const active = ref('');  // 当前显示的内容
 const routeId = ref(null);  // 当前选中的路线 ID
 const showDelete = ref(false);  // 控制删除按钮
-const guideId = localStorage.getItem('guide_id');  // 导游的 ID
+
 const selectedTouristId = ref(null);  // 当前选中的游客 ID
+
+  const guideId = localStorage.getItem('guide_id'||'0');  // 导游的 ID
+  const role = parseInt(localStorage.getItem('role') || '0');
+  const userId = localStorage.getItem('user_id'||'0');  // 导游的 ID
+  console.log('当前角色id：',guideId)
+  console.log('当前角色role：',role)
+
+
+  const creatorId = userId;
+  const creatorRole = parseInt(localStorage.getItem('role') || '0');
+
 
 // 切换到查看路线详情页面
 const viewRouteDetails = (id) => {

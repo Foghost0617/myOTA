@@ -505,7 +505,7 @@
   const connectSocket = () => {
     if (socket) socket.close() // 断开旧连接
   
-    const url = `ws://localhost:8006/ws/chat/${props.senderRole}/${props.senderId}`
+    const url = `ws://localhost:8010/ws/chat/${props.senderRole}/${props.senderId}`
     socket = new WebSocket(url)
   
     socket.onmessage = (event) => {
