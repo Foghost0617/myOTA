@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
-from backend.routers import user_router,route_router,guide_router,route_guide,tourist_route_router,chat_router,complaints_router
+from backend.routers import user_router,route_router,guide_router,route_guide,tourist_route_router,chat_router,complaints_router,group_chat_router
 from backend.core.database import engine
 from backend.models import Base
 from fastapi.routing import APIRoute
@@ -10,7 +10,7 @@ from fastapi.routing import APIRoute
 
 # 创建 FastAPI 实例
 app = FastAPI()
-# 添加 CORS 中间件
+# 添加 CORS 中间件ss
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # 允许所有域名的跨域请求，生产环境中最好指定具体的域名
@@ -29,6 +29,7 @@ app.include_router(chat_router.router)
 app.include_router(tourist_route_router.router)
 app.include_router(complaints_router.router)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.include_router(group_chat_router.router)
 
 @app.on_event("startup")
 async def print_routes():

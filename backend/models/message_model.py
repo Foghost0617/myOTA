@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey, DateTime, func,Float
+from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey, DateTime, func, Float, BigInteger
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -24,6 +25,9 @@ class Message(Base):
     location_owner_id = Column(Integer, nullable=True)
     location_owner_role = Column(Integer, nullable=True)
 
+    group_receivers = relationship("GroupMessageReceiver", back_populates="message")
+
+
 class ChatGroup(Base):
     __tablename__ = "chat_groups"
 
@@ -40,3 +44,15 @@ class ChatGroupMember(Base):
     group_id = Column(Integer, ForeignKey("chat_groups.id"), nullable=False)
     user_id = Column(Integer, nullable=False)
     user_role = Column(Integer, nullable=False)
+
+
+class GroupMessageReceiver(Base):
+    __tablename__ = "group_message_receivers"
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    message_id = Column(BigInteger, ForeignKey("messages.id"), nullable=False)
+    user_id = Column(BigInteger, nullable=False)
+    user_role = Column(Integer, nullable=False)
+
+    # 关联回 Message（反向）
+    message = relationship("Message", back_populates="group_receivers")
