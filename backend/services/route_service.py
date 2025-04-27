@@ -122,7 +122,6 @@ class RouteService:
 
 
 
-
     # 上传图像
     def update_spot_image_url(self, spot_id: int, image_url: str) -> bool:
         spot = self.db.query(RouteSpot).filter(RouteSpot.id == spot_id).first()

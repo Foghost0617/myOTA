@@ -38,6 +38,8 @@ def create_group_chat(request: CreateGroupChatRequest):
 
 @router.get("/available-members", response_model=List[dict])
 def get_available_group_members(creator_id: int, creator_role: int):
+    print('进入获取可拉取的路由')
+    print(creator_id,creator_role)
     db: Session = SessionLocal()
     try:
         service = GroupChatService(db)
@@ -48,6 +50,7 @@ def get_available_group_members(creator_id: int, creator_role: int):
             {"user_id": uid, "user_role": role}
             for uid, role in zip(member_ids, member_roles)
         ]
+        print(members)
         return members
     except Exception as e:
         print("获取可选群聊成员出错：", str(e))

@@ -54,25 +54,72 @@ class GroupChatService:
             """根据创建者的角色获取可以拉的群成员"""
             valid_member_ids = []
             valid_member_roles = []
-
             if creator_role == 3:  # 旅社
-                agency_id = self.db.query(TravelAgency).filter(TravelAgency.id == creator_id).first().id
+                agency_id = self.db.query(TravelAgency).filter(TravelAgency.user_id == creator_id).first().id
                 print("旅社id：",agency_id)
                 guides = self.db.query(Guide).filter(Guide.agency_id == agency_id).all()
                 valid_member_ids = [guide.user_id for guide in guides]
+                # 返回的是导游的 userid
                 valid_member_roles = [2] * len(valid_member_ids)
-
             elif creator_role == 4:  # 文旅局
                 travel_agencies = self.db.query(TravelAgency).all()
+                print(travel_agencies)
                 valid_member_ids = [agency.user_id for agency in travel_agencies]
+                # 返回的是 旅社userid
                 valid_member_roles = [3] * len(valid_member_ids)
+            # elif creator_role == 2:  # 导游
+            #     assigned_route_ids = self.db.query(RouteGuide.route_id).filter(RouteGuide.guide_id == creator_id).all()
+            #     assigned_route_ids = [route_id[0] for route_id in assigned_route_ids]
+            #     tourists = self.db.query(TouristRouteRelation).filter(
+            #         TouristRouteRelation.route_id.in_(assigned_route_ids)).all()
+            #     # 返回游客的user id？？
+            #     valid_member_ids = [tourist.user_id for tourist in tourists]
+            #     valid_member_roles = [1] * len(valid_member_ids)
+
+            # elif creator_role == 2:  # 导游
+            #     guide = self.db.query(Guide).filter(Guide.user_id == creator_id).first()
+            #     print('查询到的导游Guide：',guide)
+            #     if not guide:
+            #         raise Exception("导游不存在")
+            #
+            #     assigned_route_ids = self.db.query(RouteGuide.route_id).filter(RouteGuide.guide_id == guide.id).all()
+            #     assigned_route_ids_after = [route_id[0] for route_id in assigned_route_ids]
+            #     if not assigned_route_ids_after:
+            #         return []
+            #
+            #     tourists = self.db.query(TouristRouteRelation).filter(
+            #         TouristRouteRelation.route_id.in_(assigned_route_ids_after)).all()
+            #
+            #     valid_member_ids = [tourist.tourist.user_id for tourist in tourists]
+            #     valid_member_roles = [1] * len(valid_member_ids)
+
             elif creator_role == 2:  # 导游
-                assigned_route_ids = self.db.query(RouteGuide.route_id).filter(RouteGuide.guide_id == creator_id).all()
-                assigned_route_ids = [route_id[0] for route_id in assigned_route_ids]
+                print(f"正在处理导游的查询，creator_id: {creator_id}")
+                # 查询导游信息
+                guide = self.db.query(Guide).filter(Guide.user_id == creator_id).first()
+                print(f"查询到的导游Guide: {guide}")
+                if not guide:
+                    print(f"导游不存在，creator_id: {creator_id}")
+                    raise Exception("导游不存在")
+                # 查询导游分配的路线
+                assigned_route_ids = self.db.query(RouteGuide.route_id).filter(RouteGuide.guide_id == guide.id).all()
+                print(f"查询到的导游分配的路线IDs: {assigned_route_ids}")
+                # 处理查询结果
+                assigned_route_ids_after = [route_id[0] for route_id in assigned_route_ids]
+                print(f"分配的路线ID（处理后）: {assigned_route_ids_after}")
+                if not assigned_route_ids_after:
+                    print("该导游没有分配任何路线，返回空列表")
+                    return []
+                # 查询与导游相关的游客
                 tourists = self.db.query(TouristRouteRelation).filter(
-                    TouristRouteRelation.route_id.in_(assigned_route_ids)).all()
-                valid_member_ids = [tourist.tourist_id for tourist in tourists]
+                    TouristRouteRelation.route_id.in_(assigned_route_ids_after)).all()
+                print(f"查询到的与导游分配路线相关的游客: {tourists}")
+                # 获取有效游客的用户ID
+                valid_member_ids = [tourist.tourist.user_id for tourist in tourists]
+                print(f"有效游客的用户ID: {valid_member_ids}")
+                # 创建角色列表
                 valid_member_roles = [1] * len(valid_member_ids)
+                print(f"有效游客的角色列表: {valid_member_roles}")
 
             return valid_member_ids, valid_member_roles
 
