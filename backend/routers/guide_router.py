@@ -1,9 +1,14 @@
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
+
+from backend.models.route_guide import RouteGuide
+from backend.schemas.route_guide import RouteGuideOut, RouteGuideCreate
 from backend.schemas.user import GuideUpdate, GuideOut,TravelAgencyOut,AgencyIdOut,TouristBasic
 from backend.services.guide_service import GuideService
 from backend.core.database import SessionLocal
 from typing import List
+
+from backend.services.route_guide import RouteGuideService
 
 router = APIRouter(
     prefix="/guides",
@@ -95,3 +100,13 @@ def get_tourists_by_guide(guide_id: int):
         return tourists
     finally:
         db.close()
+
+
+
+
+
+
+
+
+
+

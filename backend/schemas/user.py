@@ -64,7 +64,7 @@ class GuideOut(BaseModel):
         from_attributes = True
 
 
-# 获取所有旅社？
+# 完善旅社信息
 class TravelAgencyOut(BaseModel):
     id: int
     agency_name: Optional[str]

@@ -42,8 +42,6 @@ class GuideService:
 
         if not route_ids:
             return []
-
-        # 2. 获取所有游客 ID
         tourist_ids = self.db.query(TouristRouteRelation.tourist_id)\
             .filter(TouristRouteRelation.route_id.in_(route_ids))\
             .distinct().all()
