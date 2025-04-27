@@ -78,7 +78,7 @@ function formatTime(timeString) {
       required: true
     }
   });
-  
+  console.log('GroupChatList 组件的数据:', props.userId);
   const emit = defineEmits(['chat-selected']);
   const groupChats = ref([]);
   
