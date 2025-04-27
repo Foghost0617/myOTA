@@ -178,6 +178,7 @@ const selectTouristForChat = (touristId) => {
       <div class="nav-group">
         <h3>路线管理</h3>
         <button class="nav-button" @click="handleNavClick('list')">查看路线</button>
+        <button class="nav-button" @click="handleNavClick('guideAssignments')">查看指派记录</button> 
       </div>
 
       <div class="nav-group">
@@ -219,6 +220,7 @@ const selectTouristForChat = (touristId) => {
             :user-id="userId"
             :role="role"
         />
+        <AssignList v-if="active === 'guideAssignments'" :guideId="guideId" />
       </div>
     </main>
   </div>
@@ -234,6 +236,7 @@ import ChatBox from '@/components/ChatBox.vue'
 import GroupChatList from '@/components/GroupChatList.vue';
 import CreateGroupChat from '@/components/CreateGroupChat.vue'
 import GroupChat from '@/components/GroupChat.vue';
+import AssignList from './AssignList.vue'
 
 const active = ref('')        // 当前显示的内容
 const routeId = ref(null)     // 当前选中的路线 ID

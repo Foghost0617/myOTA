@@ -226,20 +226,19 @@
         <button @click="() => handleNavClick('add')" class="nav-button">添加路线</button>
         <button @click="() => handleNavClick('list')" class="nav-button">查看路线</button>
         <button @click="() => handleNavClick('uploadImage')" class="nav-button">添加景点图像</button>
-        <button @click="() => handleNavClick('groupList')" class="nav-button">查看我的群聊</button> 
+        <button @click="() => handleNavClick('groupList')" class="nav-button">查看我的群聊</button>
       </div>
 
       <div class="nav-group">
         <h3>游客管理</h3>
         <button @click="() => handleNavClick('createGroupChat')" class="nav-button">创建群聊</button>
         <button @click="() => handleNavClick('handleApplications')" class="nav-button">处理申请</button>
-        <button class="nav-button">游客列表</button>
       </div>
 
       <div class="nav-group">
         <h3>行程管理</h3>
         <button @click="() => handleNavClick('assignGuide')" class="nav-button">指派导游</button>
-        <button class="nav-button">查看行程</button>
+        <button @click="() => handleNavClick('manageAssignments')" class="nav-button">指派记录管理</button> 
       </div>
     </aside>
 
@@ -249,29 +248,20 @@
         <AddRoute v-if="active === 'add'" />
         <RouteList v-if="active === 'list'" :showDelete="showDelete" @view-details="viewRouteDetails" />
         <RouteDetails v-if="active === 'details'" :routeId="routeId" />
-        <AssignGuide v-if="active === 'assignGuide'" />
+        <AssignGuide v-if="active === 'assignGuide'" :agency-id="agencyId" />
         <HandleApplications v-if="active === 'handleApplications'" />
         <UploadSpotImage v-if="active === 'uploadImage'" />
-        <CreateGroupChat
-          v-if="active === 'createGroupChat'"
-          :creator-id="userId"
-          :creator-role="creatorRole"
-        />
-        <GroupChatList 
-            v-if="active === 'groupList'" 
-            :user-id="userId" 
-            @chat-selected="handleChatSelected" 
-        />
-        <GroupChat
-            v-if="activeChat" 
-            :group-id="activeChat" 
-            :user-id="userId"
-            :role="role"
-        />
+        <CreateGroupChat v-if="active === 'createGroupChat'" :creator-id="userId" :creator-role="creatorRole" />
+        <GroupChatList v-if="active === 'groupList'" :user-id="userId" @chat-selected="handleChatSelected" />
+        <GroupChat v-if="activeChat" :group-id="activeChat" :user-id="userId" :role="role" />
+        
+        <!-- 新增指派记录管理组件 -->
+        <ManageAssign v-if="active === 'manageAssignments'" :agency-id="agencyId" />  
       </div>
     </main>
   </div>
 </template>
+
 <script setup>
 import { ref } from 'vue';
 import AddRoute from './AddRoute.vue';
@@ -283,6 +273,7 @@ import UploadSpotImage from './UploadSpotImage.vue';
 import CreateGroupChat from '@/components/CreateGroupChat.vue';
 import GroupChat from '@/components/GroupChat.vue';
 import GroupChatList from '@/components/GroupChatList.vue';
+import ManageAssign from './ManageAssign.vue'; // 引入指派记录管理组件
 
 const active = ref('');
 const routeId = ref(null);
@@ -312,13 +303,11 @@ const viewRouteDetails = (id) => {
   routeId.value = id;
 };
 
-
 // 处理选中的群聊
 const handleChatSelected = (groupId) => {
   activeChat.value = groupId;
   active.value = '';  // 取消激活群聊列表，显示群聊聊天
 };
-
 </script>
 
 
