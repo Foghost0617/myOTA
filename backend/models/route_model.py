@@ -10,7 +10,7 @@ class Route(Base):
     name = Column(String(100), nullable=False)
     description = Column(String(255))
     agency_id = Column(Integer, ForeignKey("travel_agencies.id"), nullable=False)
-    #
+
 
     # 路线和游客 中介表 这里写的是两边
     # tourist_routes = relationship("TouristRouteRelation", back_populates="route")

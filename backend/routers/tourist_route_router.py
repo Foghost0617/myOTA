@@ -1,6 +1,9 @@
 
 from fastapi import APIRouter, HTTPException, status,Depends, Query
 from sqlalchemy.orm import Session
+
+from backend.models.route_guide import RouteGuide
+from backend.models.tourist_route_model import TouristRouteRelation
 from backend.schemas.tourist_route_schema import TouristRouteOut,TouristRouteCreate,TouristRouteStatusUpdate
 from backend.services.tourist_route_service import TouristRouteService
 from backend.core.database import SessionLocal  # 直接导入SessionLocal
@@ -117,3 +120,37 @@ def update_application_status(application_id: int, status_update: TouristRouteSt
 #         return routes
 #     finally:
 #         db.close()
+
+
+@router.get("/get_guides_by_tourist/{tourist_id}")
+def get_confirmed_route_guides(tourist_id: int):
+    # 创建数据库会话
+    db: Session = SessionLocal()
+
+    try:
+        # 查询游客已确认的路线
+        confirmed_routes = db.query(TouristRouteRelation) \
+            .filter(TouristRouteRelation.tourist_id == tourist_id) \
+            .filter(TouristRouteRelation.status == '已确认') \
+            .all()
+
+        if not confirmed_routes:
+            raise HTTPException(status_code=404, detail="没有已确认的路线")
+
+        # 获取这些已确认路线的导游ID
+        route_ids = [route.route_id for route in confirmed_routes]
+        guides = db.query(RouteGuide) \
+            .filter(RouteGuide.route_id.in_(route_ids)) \
+            .all()
+
+        if not guides:
+            raise HTTPException(status_code=404, detail="未找到导游")
+
+        # 提取所有导游的 ID
+        guide_ids = [guide.guide_id for guide in guides]
+
+        return {"guide_ids": guide_ids}
+
+    finally:
+        # 确保数据库会话关闭
+        db.close()
