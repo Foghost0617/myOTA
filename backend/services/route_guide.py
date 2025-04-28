@@ -12,18 +12,7 @@ class RouteGuideService:
     def __init__(self, db: Session):
         self.db = db
 
-    # # 创建导游指派
-    # def create_route_guide(self, route_guide: RouteGuideCreate):
-    #     # 创建新的导游指派记录
-    #     db_route_guide = RouteGuide(
-    #         route_id=route_guide.route_id,
-    #         guide_id=route_guide.guide_id
-    #     )
-    #     self.db.add(db_route_guide)
-    #     self.db.commit()
-    #     self.db.refresh(db_route_guide)
-    #
-    #     return db_route_guide
+
 
     def check_assigned(self, route_id: int) -> bool:
         # 查询是否有导游指派

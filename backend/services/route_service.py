@@ -47,14 +47,7 @@ class RouteService:
 
         return db_spots  # 返回创建的景点列表
 
-    # def get_routes_by_agency(self, agency_id: int) -> List[RouteOut]:
-    #     # 查询该 agency_id 下所有的路线
-    #     routes = self.db.query(Route).filter(Route.agency_id == agency_id).all()
-    #
-    #     # 打印查询结果，检查是否正确获取了多条记录
-    #     print(f"查询到的路线: {routes}")
-    #
-    #     return [RouteOut.from_orm(route) for route in routes] if routes else []
+
 
     def get_routes_by_agency(self, agency_id: int) -> List[RouteOut]:
             return self.db.query(Route).filter(Route.agency_id == agency_id).all()
@@ -94,15 +87,6 @@ class RouteService:
         return [RouteSpotOut.from_orm(spot) for spot in route_spots]
 
 
-
-    # def delete_route(self, route_id: int):
-    #     route = self.db.query(Route).filter(Route.id == route_id).first()
-    #     if route:
-    #         self.db.delete(route)
-    #         self.db.commit()
-    #         return {"message": f"Route {route_id} deleted successfully"}
-    #     else:
-    #         return None  # 不存在时返回 None，让路由层处理
 
     def delete_route(self, route_id: int) -> bool:
         # 先删除关联的游客记录

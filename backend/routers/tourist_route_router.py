@@ -66,60 +66,7 @@ def update_application_status(application_id: int, status_update: TouristRouteSt
     finally:
         db.close()
 
-# @router.put("/enrollment/{application_id}/status", response_model=TouristRouteOut)
-# def update_application_status(
-#     application_id: int,
-#     status_update: TouristRouteStatusUpdate = Body(...)
-# ):
-#     db: Session = SessionLocal()
-#     try:
-#         tourist_route_service = TouristRouteService(db)
-#         updated_application = tourist_route_service.update_application_status(
-#             application_id, status_update.status
-#         )
-#         if not updated_application:
-#             raise HTTPException(
-#                 status_code=status.HTTP_400_BAD_REQUEST,
-#                 detail="无法更新报名记录状态"
-#             )
-#         return updated_application
-#     finally:
-#         db.close()
 
-
-
-#
-# # 获取某条路线的所有报名游客
-# @router.get("/route/{route_id}/tourists", response_model=List[TouristRouteOut])
-# def get_tourists_by_route(route_id: int):
-#     db: Session = SessionLocal()
-#     try:
-#         tourist_route_service = TouristRouteService(db)
-#         tourists = tourist_route_service.get_signed_up_tourists(route_id)
-#         if not tourists:
-#             raise HTTPException(
-#                 status_code=status.HTTP_404_NOT_FOUND,
-#                 detail="没有找到报名此路线的游客"
-#             )
-#         return tourists
-#     finally:
-#         db.close()
-#
-# # 获取某个游客报名的所有路线
-# @router.get("/tourist/{tourist_id}/routes", response_model=List[TouristRouteOut])
-# def get_routes_by_tourist(tourist_id: int):
-#     db: Session = SessionLocal()
-#     try:
-#         tourist_route_service = TouristRouteService(db)
-#         routes = tourist_route_service.get_tourist_routes(tourist_id)
-#         if not routes:
-#             raise HTTPException(
-#                 status_code=status.HTTP_404_NOT_FOUND,
-#                 detail="没有找到该游客报名的路线"
-#             )
-#         return routes
-#     finally:
-#         db.close()
 
 
 @router.get("/get_guides_by_tourist/{tourist_id}")

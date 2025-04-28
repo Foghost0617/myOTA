@@ -8,7 +8,6 @@ class TouristRouteRelation(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     tourist_id = Column(Integer, ForeignKey('tourists.id'), nullable=False)
-    # route_id = Column(Integer, ForeignKey('routes.id'), nullable=False)
     route_id = Column(Integer, ForeignKey('routes.id', ondelete="CASCADE"), nullable=False)
     signup_date = Column(TIMESTAMP, server_default=func.now())
     status = Column(Enum('待确认', '已确认', '已取消', name='status_enum'), default='待确认')
