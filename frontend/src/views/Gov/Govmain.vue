@@ -88,7 +88,6 @@ console.log(userId,'传进群聊的uerId')
 
     <!-- 右侧内容区 -->
     <main class="content">
-      <h1>待定内容，会根据左侧按钮展示不同组件</h1>
       <div class="placeholder-box">
         <ComplaintList v-if="active === 'complaints'" />
         <RouteEnrollmentCount v-if="active === 'enrollments'" />

@@ -273,6 +273,7 @@
   // 提交基本路线信息
   const submitRouteInfo = async () => {
     const agency_id = parseInt(localStorage.getItem('agency_id') || '0')
+    console.log(agency_id)
     if (!agency_id) {
       alert('请重新登录获取身份信息')
       return

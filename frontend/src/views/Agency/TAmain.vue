@@ -226,13 +226,13 @@
         <button @click="() => handleNavClick('add')" class="nav-button">添加路线</button>
         <button @click="() => handleNavClick('list')" class="nav-button">查看路线</button>
         <button @click="() => handleNavClick('uploadImage')" class="nav-button">添加景点图像</button>
-        <button @click="() => handleNavClick('groupList')" class="nav-button">查看我的群聊</button>
       </div>
 
       <div class="nav-group">
-        <h3>游客管理</h3>
-        <button @click="() => handleNavClick('createGroupChat')" class="nav-button">创建群聊</button>
+        <h3>人员管理</h3>
         <button @click="() => handleNavClick('handleApplications')" class="nav-button">处理申请</button>
+        <button @click="() => handleNavClick('createGroupChat')" class="nav-button">创建群聊</button>
+        <button @click="() => handleNavClick('groupList')" class="nav-button">查看我的群聊</button>
       </div>
 
       <div class="nav-group">

@@ -170,20 +170,20 @@ const selectTouristForChat = (touristId) => {
     <aside class="sidebar">
       <h2>导游后台</h2>
 
-      <div class="nav-group">
+      <!-- <div class="nav-group">
         <h3>个人信息</h3>
         <button class="nav-button" @click="handleNavClick('completeInfo')">完善个人信息</button>
-      </div>
+      </div> -->
 
       <div class="nav-group">
         <h3>路线管理</h3>
         <button class="nav-button" @click="handleNavClick('list')">查看路线</button>
-        <button class="nav-button" @click="handleNavClick('guideAssignments')">查看指派记录</button> 
+        <button class="nav-button" @click="handleNavClick('guideAssignments')">查看我的日程</button> 
       </div>
 
       <div class="nav-group">
         <h3>游客管理</h3>
-        <button class="nav-button" @click="handleNavClick('tourists')">查看游客</button>
+        <button class="nav-button" @click="handleNavClick('tourists')">查看我的游客</button>
         <button class="nav-button" @click="handleNavClick('createGroupChat')">创建群聊</button>
         <button class="nav-button" @click="handleNavClick('groupList')">查看我的群聊</button> 
       </div>
@@ -191,7 +191,6 @@ const selectTouristForChat = (touristId) => {
 
     <!-- 右侧内容区 -->
     <main class="content">
-      <h1>待定内容，会根据左侧按钮展示不同组件</h1>
       <div class="placeholder-box">
         <CompleteGuideInfo v-if="active === 'completeInfo'" />
         <RouteList v-if="active === 'list'" :showDelete="showDelete" @view-details="viewRouteDetails" />
@@ -303,6 +302,7 @@ const handleChatSelected = (groupId) => {
   background-color: #2c3e50;
   color: white;
   padding: 20px;
+  overflow-y: auto; /* 如果侧边栏内容超出，添加滚动条 */
 }
 
 .sidebar h2 {
@@ -342,6 +342,8 @@ const handleChatSelected = (groupId) => {
   flex: 1;
   padding: 30px;
   background-color: #ecf0f1;
+  overflow-y: auto;  /* 使内容区支持纵向滚动 */
+  max-height: 100vh; /* 限制内容区的最大高度为视口高度 */
 }
 
 .content h1 {

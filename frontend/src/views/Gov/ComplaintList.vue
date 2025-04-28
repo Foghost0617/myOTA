@@ -93,7 +93,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    max-height: 70%; /* 设置最大高度 */
+    max-height: 400px; /* 设置最大高度 */
     overflow-y: auto; /* 允许垂直滚动 */
   }
   

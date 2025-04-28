@@ -114,70 +114,109 @@
   
   
   <style scoped>
-  .route-signup {
-    padding: 20px;
-  }
-  
-  .route-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .route-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .route-info {
-    flex-grow: 1;
-  }
-  
-  .btn-signup {
-    padding: 8px 16px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .btn-signup:hover {
-    background-color: #218838;
-  }
-  
-  .no-routes {
-    text-align: center;
-    font-size: 16px;
-    color: #888;
-  }
-  
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .pagination button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .pagination button:disabled {
-    background-color: #cccccc;
-  }
-  
-  .pagination span {
-    margin: 0 10px;
-    line-height: 32px;
-  }
-  </style>
-  
+h2 {
+  color: #000000; /* 设置 <h2> 颜色为黑色 */
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px; /* 增加下边距 */
+}
+
+.route-signup {
+  padding: 20px;
+  background-color: #f9f9f9; /* 轻微灰色背景，增强可读性 */
+  border-radius: 8px;
+}
+
+.route-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.route-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin: 10px 0;
+  background-color: #ffffff;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 增加阴影效果 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 平滑的交互效果 */
+}
+
+.route-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.route-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333333; /* 标题颜色稍深 */
+  margin-bottom: 8px;
+}
+
+.route-info p {
+  font-size: 14px;
+  color: #666666; /* 描述文字颜色较浅 */
+}
+
+.btn-signup {
+  padding: 10px 18px;
+  background-color: #28a745; /* 使用自然绿 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* 添加过渡效果 */
+}
+
+.btn-signup:hover {
+  background-color: #218838;
+  transform: scale(1.05); /* 鼠标悬停时轻微放大按钮 */
+}
+
+.no-routes {
+  text-align: center;
+  font-size: 16px;
+  color: #888888; /* 灰色文字 */
+  margin-top: 30px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 10px 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pagination button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05); /* 鼠标悬停时轻微放大按钮 */
+}
+
+.pagination button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  margin: 0 12px;
+  line-height: 40px;
+  font-size: 14px;
+  color: #333333; /* 页码颜色 */
+}
+</style>

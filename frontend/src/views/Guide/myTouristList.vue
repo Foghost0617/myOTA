@@ -79,7 +79,6 @@
           <div><strong>电话：</strong>{{ tourist.phone || '未填写' }}</div>
           <!-- 新增私聊按钮 -->
           <button @click="$emit('start-chat', tourist.id)">私聊该游客</button>
-          <!-- <button @click="startChat(tourist.id)">私聊该游客</button> -->
         </li>
       </ul>
   
@@ -112,7 +111,6 @@
     try {
       const response = await axios.get(`guides/${guideId}/tourists`)
       tourists.value = response.data
-      
     } catch (error) {
       console.error('获取游客失败:', error)
       tourists.value = []
@@ -121,54 +119,71 @@
     }
   })
   
-
   const startChat = (touristId) => {
-  if (!guideId) {
-    console.error("导游 ID 为空，无法开始聊天");
-    return;
+    if (!guideId) {
+      console.error("导游 ID 为空，无法开始聊天");
+      return;
+    }
+    selectedTouristId.value = touristId
+    console.log('游客id是：', touristId)
+    console.log('导游id是：', guideId)
+    // 这里可以进一步处理 WebSocket 连接
   }
-  selectedTouristId.value = touristId
-  console.log('游客id是：', touristId)
-  console.log('导游id是：', guideId)
-  // 这里可以进一步处理 WebSocket 连接
-}
   </script>
   
   <style scoped>
-.tourist-list {
-  list-style: none;
-  padding: 0;
-}
-
-.tourist-item {
-  background: #fff;
-  color: #2c3e50;
-  padding: 16px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: box-shadow 0.2s ease;
-}
-
-.tourist-item:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-}
-
-.tourist-item strong {
-  color: #34495e;
-}
-
-button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #2980b9;
-}
-
+  .tourist-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .tourist-item {
+    background: #ffffff;
+    color: #2c3e50;
+    padding: 18px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  .tourist-item:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+  }
+  
+  .tourist-item strong {
+    color: #34495e;
+    font-weight: 600;
+  }
+  
+  button {
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  button:hover {
+    background-color: #16a085;
+    transform: translateY(-2px);
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
+  h1 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  
   </style>
+  

@@ -363,15 +363,19 @@ onMounted(() => {
   
   <template>
     <div class="group-chat-chat">
-      <h2>群聊 {{ groupId }}</h2>
+      <!-- <h2>群聊 {{ groupId }}</h2> -->
       <div class="group-chat">
         <div class="chat-history" ref="chatHistory">
           <!-- 显示聊天记录 -->
-          <div v-for="message in messages" :key="message.message_id" class="message-item" 
-               :class="{
-                 'my-message': Number(message.sender_id) === Number(props.userId),
-                 'other-message': Number(message.sender_id) !== Number(props.userId)
-               }">
+          <div
+            v-for="message in messages"
+            :key="message.message_id"
+            class="message-item"
+            :class="{
+              'my-message': Number(message.sender_id) === Number(props.userId),
+              'other-message': Number(message.sender_id) !== Number(props.userId)
+            }"
+          >
             <div class="message-content">
               <p v-if="!message.is_location">{{ message.content }}</p>
               <div v-if="message.is_location">
@@ -427,7 +431,7 @@ onMounted(() => {
   
   // 建立 WebSocket 连接
   const connectWebSocket = () => {
-    socket.value = new WebSocket(`ws://localhost:8009/groupchats/ws/group-chat/${props.groupId}`);
+    socket.value = new WebSocket(`ws://localhost:8001/groupchats/ws/group-chat/${props.groupId}`);
     console.log("尝试连接 WebSocket...");
   
     socket.value.onopen = () => {
@@ -437,13 +441,6 @@ onMounted(() => {
     socket.value.onmessage = (event) => {
       const message = JSON.parse(event.data);
       console.log("收到新消息:", message);  // 打印接收到的新消息
-  
-      // 检查消息的发送者 ID 是否为当前用户
-      if (Number(message.sender_id) === Number(props.userId)) {
-        console.log("这是我的消息，ID:", message.sender_id);
-      } else {
-        console.log("这是其他人的消息，ID:", message.sender_id);
-      }
   
       messages.value.push(message);  // 将新消息加入到消息列表
       scrollToBottom();  // 新消息到来时滚动到底部
@@ -502,84 +499,109 @@ onMounted(() => {
   <style scoped>
   .group-chat-chat {
     width: 100%;
-    max-width: 600px;
+    max-width: 850px;
     margin: auto;
-    padding: 10px;
+    padding: 15px;
+    max-height: 700px;
   }
   
   .group-chat {
     display: flex;
     flex-direction: column;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
   .chat-history {
-    height: 400px;
-    max-height: 400px;  /* 限制最大高度 */
-    overflow-y: auto;   /* 超过最大高度时启用滚动 */
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
     margin-bottom: 10px;
+    max-height: 70vh; /* 控制最大高度 */
   }
-  
+
   .message-item {
-    padding: 12px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    max-width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    max-width: 75%;
     word-wrap: break-word;
     display: flex;
     flex-direction: column;
     position: relative;
+    font-size: 14px;
   }
-  
+
+  /* 我的消息 */
   .my-message {
-    background-color: #dcf8c6;  /* 绿色背景 */
-    align-self: flex-end;  /* 自己的消息靠右 */
-    margin-left: auto;  /* 靠右显示 */
-    color: black;  /* 消息内容字体改为黑色 */
+    background-color: #daf8da;
+    align-self: flex-end;
+    margin-left: auto;
+    color: #333;
   }
-  
+
+  /* 他人的消息 */
   .other-message {
-    background-color: #f1f0f0;  /* 灰色背景 */
-    align-self: flex-start;  /* 其他人的消息靠左 */
-    margin-right: auto;  /* 靠左显示 */
-    color: black;  /* 消息内容字体改为黑色 */
+    background-color: rgb(230, 226, 226); /* 浅灰色 */
+    align-self: flex-start;
+    margin-right: auto;
+    color: #333;
   }
-  
+
   .message-content {
-    font-size: 1em;
+    font-size: 14px;
     word-wrap: break-word;
-    max-width: 100%; /* 确保内容不会溢出 */
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
-  
+
   .sender-id {
     font-size: 0.75em;
     color: #888;
-    margin-top: 5px;
+    margin-top: 4px;
   }
-  
+
   .timestamp {
     font-size: 0.75em;
-    color: gray;
+    color: #aaa;
     position: absolute;
     bottom: 5px;
     right: 10px;
   }
-  
+
   .send-message {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 10px;
   }
-  
+
   .send-message input {
     width: 80%;
-    padding: 5px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 14px;
   }
-  
+
   .send-message button {
-    padding: 5px 10px;
+    padding: 8px 12px;
+    background-color: #4CAF50; /* 绿色 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
   }
-  </style>
+
+  .send-message button:hover {
+    background-color: #45a049;
+  }
+</style>
+
+  
   
   
   
